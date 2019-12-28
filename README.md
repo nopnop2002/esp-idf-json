@@ -7,4 +7,10 @@ The official documentation for the JSON component is [here](https://github.com/e
 
 [Here](https://github.com/DaveGamble/cJSON/blob/master/tests/readme_examples.c) is a sample by Dave Gamble.
 
+# How to use
+```
+git clone https://github.com/nopnop2002/esp-idf-json
+cd esp-idf-json/json-basic
+make flash monitor
+```
 
