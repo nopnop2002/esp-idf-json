@@ -2,7 +2,7 @@
 
 DeSerialize JOSN message received by HTTP.   
 
-## Install JSON Server on your host
+## Install JSON (Fake REST) Server on your host
 ```
 $ sudo apt-get install npm
 
@@ -29,9 +29,9 @@ $ sudo npm install -g json-server
 }
 ```
 
-## Start JSON Server
+## Start JSON (Fake REST) Server
 ```
-json-server --watch --host {My_IP_Address} db.json
+$ json-server --watch --host {My_IP_Address} db.json
 ```
 
 ![JSON_Server](https://user-images.githubusercontent.com/6020549/71557207-3320e700-2a86-11ea-9761-823007c4b370.jpg)
@@ -39,8 +39,8 @@ json-server --watch --host {My_IP_Address} db.json
 
 ## Build ESP-IDF Project
 ```
-make menuconfig
-make flash monitor
+$ make menuconfig
+$ make flash monitor
 ```
 
 ![menuconfig-1](https://user-images.githubusercontent.com/6020549/71557211-3d42e580-2a86-11ea-804b-f25373ce589f.jpg)
