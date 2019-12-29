@@ -30,3 +30,7 @@ I (423) JSON: string[0]=Rena
 I (423) JSON: string[1]=Yuki
 I (423) JSON: string[2]=Mimi
 ```
+
+__cJSON does not distinguish Interger, Float, Double__   
+__These are all parsed as Numbers__   
+
