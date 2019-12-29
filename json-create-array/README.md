@@ -32,5 +32,4 @@ I (423) JSON: string[2]=Mimi
 ```
 
 __JSON library does not distinguish Interger, Float, Double.__   
-__These are all parsed as Numbers and stored in Interger and Double value.__
-
+__These are all parsed as numbers and stored in both Interger and Double.__
