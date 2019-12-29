@@ -31,6 +31,6 @@ I (423) JSON: string[1]=Yuki
 I (423) JSON: string[2]=Mimi
 ```
 
-__cJSON does not distinguish Interger, Float, Double__   
-__These are all parsed as Numbers and stored in Interger and Double value__
+__JSON library does not distinguish Interger, Float, Double.__   
+__These are all parsed as Numbers and stored in Interger and Double value.__
 
