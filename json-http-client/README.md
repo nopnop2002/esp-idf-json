@@ -9,7 +9,7 @@ $ sudo apt-get install npm
 $ sudo npm install -g json-server
 ```
 
-## Create db.json
+## Create db.json on your host
 ```
 {
   "todos": [
