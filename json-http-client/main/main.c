@@ -265,7 +265,16 @@ void app_main()
 	//Check everything was created
 	configASSERT( xRingbuffer );
 
-	ESP_LOGI(TAG, "url=%s",EXAMPLE_ESP_REST_URL);
+	//Array
+	char url[64];
+	sprintf(url, "%s", EXAMPLE_ESP_REST_URL);
+	ESP_LOGI(TAG, "url=%s",url);
 	//http_client("http://192.168.10.43:3000/todos"); 
-	http_client(EXAMPLE_ESP_REST_URL); 
+	http_client(url); 
+
+	//Object
+	sprintf(url, "%s/2", EXAMPLE_ESP_REST_URL);
+	ESP_LOGI(TAG, "url=%s",url);
+	http_client(url); 
+
 }

@@ -49,7 +49,6 @@ $ make flash monitor
 
 ## Console output
 ```
-I (5253) JSON: buffer=
 [
   {
     "id": 1,
@@ -91,5 +90,27 @@ I (5323) JSON: int=1351824240 double=1351824240.000000
 I (5333) JSON: [data]
 I (5333) JSON: int=1 double=1.110000
 I (5343) JSON: int=2 double=2.220000
-I (5343) JSON: HTTP_EVENT_DISCONNECTED
+
+
+
+{
+  "id": 2,
+  "title": "Hello Japan!",
+  "time": 1351824240,
+  "data": [
+    1.11,
+    2.22
+  ]
+}
+I (6487) JSON: Deserialize.....
+I (6497) JSON: [id]
+I (6497) JSON: int=2 double=2.000000
+I (6497) JSON: [title]
+I (6497) JSON: Hello Japan!
+I (6507) JSON: [time]
+I (6507) JSON: int=1351824240 double=1351824240.000000
+I (6517) JSON: [data]
+I (6517) JSON: int=1 double=1.110000
+I (6517) JSON: int=2 double=2.220000
+
 ```
