@@ -15,16 +15,16 @@
 ## DeSerialize
 ```
 I (314) JSON: Deserialize.....
-I (314) JSON: type=cJSON_String
-I (324) JSON: [version]=v4.0-dev-1186-gf16f4297c-dirty
-I (324) JSON: type=cJSON_Number
-I (334) JSON: [cores]=2 2.000000
-I (334) JSON: type=cJSON_True
-I (334) JSON: [true] is True
-I (344) JSON: type=cJSON_False
-I (344) JSON: [false] is False
-I (344) JSON: type=cJSON_False
-I (354) JSON: [bool] is False
-I (354) JSON: type=cJSON_NULL
-I (364) JSON: [null] is Null
+I (314) JSON: [version]
+I (324) JSON: v4.0-dev-1186-gf16f4297c-dirty
+I (324) JSON: [cores]
+I (324) JSON: int=2 double=2.000000
+I (334) JSON: [true]
+I (334) JSON: True
+I (334) JSON: [false]
+I (344) JSON: False
+I (344) JSON: [bool]
+I (344) JSON: False
+I (344) JSON: [null]
+I (354) JSON: Null
 ```
