@@ -71,7 +71,6 @@ void app_main()
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
 
-#if 1
 	ESP_LOGI(TAG, "Deserialize.....");
 	cJSON *root2 = cJSON_Parse(my_json_string);
 	ESP_LOGI(TAG, "root2->type=%s", JSON_Types(root2->type));
@@ -92,5 +91,4 @@ void app_main()
 		ESP_LOGI(TAG, "flag=%d",flag);
 	}
 	cJSON_Delete(root2);
-#endif
 }
