@@ -41,6 +41,16 @@ char *JSON_Types(int type) {
 	return NULL;
 }
 
+void JSON_Array(const cJSON * const array) {
+    int id = cJSON_GetObjectItem(array,"id")->valueint;
+    char *version = cJSON_GetObjectItem(array,"version")->valuestring;
+    int cores = cJSON_GetObjectItem(array,"cores")->valueint;
+    bool flag = cJSON_GetObjectItem(array,"flag")->valueint;
+    ESP_LOGI(TAG, "id=%d",id);
+    ESP_LOGI(TAG, "version=%s",version);
+    ESP_LOGI(TAG, "cores=%d",cores);
+    ESP_LOGI(TAG, "flag=%d",flag);
+}
 
 
 void app_main()
@@ -68,20 +78,12 @@ void app_main()
 
 	ESP_LOGI(TAG, "Deserialize.....");
 	cJSON *root2 = cJSON_Parse(my_json_string);
-	ESP_LOGI(TAG, "root2->type=%s", JSON_Types(root2->type));
+	//ESP_LOGI(TAG, "root2->type=%s", JSON_Types(root2->type));
 	int root2_array_size = cJSON_GetArraySize(root2); 
-	ESP_LOGI(TAG, "root2_array_size=%d", root2_array_size);
+	//ESP_LOGI(TAG, "root2_array_size=%d", root2_array_size);
 	for (int i=0;i<root2_array_size;i++) {
 		cJSON *array = cJSON_GetArrayItem(root2,i);
-		//ESP_LOGI(TAG, "array->type=%s", JSON_Types(array->type));
-		int id = cJSON_GetObjectItem(array,"id")->valueint;
-		char *version = cJSON_GetObjectItem(array,"version")->valuestring;
-		int cores = cJSON_GetObjectItem(array,"cores")->valueint;
-		bool flag = cJSON_GetObjectItem(array,"flag")->valueint;
-		ESP_LOGI(TAG, "id=%d",id);
-		ESP_LOGI(TAG, "version=%s",version);
-		ESP_LOGI(TAG, "cores=%d",cores);
-		ESP_LOGI(TAG, "flag=%d",flag);
+		JSON_Array(array);
 	}
 	cJSON_Delete(root2);
 }
