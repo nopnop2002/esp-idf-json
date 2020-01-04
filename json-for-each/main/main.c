@@ -10,56 +10,56 @@
 static const char *TAG = "JSON";
 
 char *JSON_Types(int type) {
-    if (type == cJSON_Invalid) return ("cJSON_Invalid");
-    if (type == cJSON_False) return ("cJSON_False");
-    if (type == cJSON_True) return ("cJSON_True");
-    if (type == cJSON_NULL) return ("cJSON_NULL");
-    if (type == cJSON_Number) return ("cJSON_Number");
-    if (type == cJSON_String) return ("cJSON_String");
-    if (type == cJSON_Array) return ("cJSON_Array");
-    if (type == cJSON_Object) return ("cJSON_Object");
-    if (type == cJSON_Raw) return ("cJSON_Raw");
-    return NULL;
+	if (type == cJSON_Invalid) return ("cJSON_Invalid");
+	if (type == cJSON_False) return ("cJSON_False");
+	if (type == cJSON_True) return ("cJSON_True");
+	if (type == cJSON_NULL) return ("cJSON_NULL");
+	if (type == cJSON_Number) return ("cJSON_Number");
+	if (type == cJSON_String) return ("cJSON_String");
+	if (type == cJSON_Array) return ("cJSON_Array");
+	if (type == cJSON_Object) return ("cJSON_Object");
+	if (type == cJSON_Raw) return ("cJSON_Raw");
+	return NULL;
 }
 
 
 void JSON_Parse(const cJSON * const root) {
-    //ESP_LOGI(TAG, "root->type=%s", JSON_Types(root->type));
-    cJSON *current_element = NULL;
-    //ESP_LOGI(TAG, "roo->child=%p", root->child);
-    //ESP_LOGI(TAG, "roo->next =%p", root->next);
-    cJSON_ArrayForEach(current_element, root) {
-        //ESP_LOGI(TAG, "type=%s", JSON_Types(current_element->type));
-        //ESP_LOGI(TAG, "current_element->string=%p", current_element->string);
-        if (current_element->string) {
-            const char* string = current_element->string;
-            ESP_LOGI(TAG, "[%s]", string);
-        }
-        if (cJSON_IsInvalid(current_element)) {
-            ESP_LOGI(TAG, "Invalid");
-        } else if (cJSON_IsFalse(current_element)) {
-            ESP_LOGI(TAG, "False");
-        } else if (cJSON_IsTrue(current_element)) {
-            ESP_LOGI(TAG, "True");
-        } else if (cJSON_IsNull(current_element)) {
-            ESP_LOGI(TAG, "Null");
-        } else if (cJSON_IsNumber(current_element)) {
-            int valueint = current_element->valueint;
-            double valuedouble = current_element->valuedouble;
-            ESP_LOGI(TAG, "int=%d double=%f", valueint, valuedouble);
-        } else if (cJSON_IsString(current_element)) {
-            const char* valuestring = current_element->valuestring;
-            ESP_LOGI(TAG, "%s", valuestring);
-        } else if (cJSON_IsArray(current_element)) {
-            //ESP_LOGI(TAG, "Array");
-            JSON_Parse(current_element);
-        } else if (cJSON_IsObject(current_element)) {
-            //ESP_LOGI(TAG, "Object");
-            JSON_Parse(current_element);
-        } else if (cJSON_IsRaw(current_element)) {
-            ESP_LOGI(TAG, "Raw(Not support)");
-        }
-    }
+	//ESP_LOGI(TAG, "root->type=%s", JSON_Types(root->type));
+	cJSON *current_element = NULL;
+	//ESP_LOGI(TAG, "roo->child=%p", root->child);
+	//ESP_LOGI(TAG, "roo->next =%p", root->next);
+	cJSON_ArrayForEach(current_element, root) {
+		//ESP_LOGI(TAG, "type=%s", JSON_Types(current_element->type));
+		//ESP_LOGI(TAG, "current_element->string=%p", current_element->string);
+		if (current_element->string) {
+			const char* string = current_element->string;
+			ESP_LOGI(TAG, "[%s]", string);
+		}
+		if (cJSON_IsInvalid(current_element)) {
+			ESP_LOGI(TAG, "Invalid");
+		} else if (cJSON_IsFalse(current_element)) {
+			ESP_LOGI(TAG, "False");
+		} else if (cJSON_IsTrue(current_element)) {
+			ESP_LOGI(TAG, "True");
+		} else if (cJSON_IsNull(current_element)) {
+			ESP_LOGI(TAG, "Null");
+		} else if (cJSON_IsNumber(current_element)) {
+			int valueint = current_element->valueint;
+			double valuedouble = current_element->valuedouble;
+			ESP_LOGI(TAG, "int=%d double=%f", valueint, valuedouble);
+		} else if (cJSON_IsString(current_element)) {
+			const char* valuestring = current_element->valuestring;
+			ESP_LOGI(TAG, "%s", valuestring);
+		} else if (cJSON_IsArray(current_element)) {
+			//ESP_LOGI(TAG, "Array");
+			JSON_Parse(current_element);
+		} else if (cJSON_IsObject(current_element)) {
+			//ESP_LOGI(TAG, "Object");
+			JSON_Parse(current_element);
+		} else if (cJSON_IsRaw(current_element)) {
+			ESP_LOGI(TAG, "Raw(Not support)");
+		}
+	}
 }
 
 
