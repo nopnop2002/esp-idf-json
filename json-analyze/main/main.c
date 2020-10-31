@@ -23,7 +23,7 @@ char *JSON_Types(int type) {
 }
 
 
-void JSON_Parse(const cJSON * const root) {
+void JSON_Analyze(const cJSON * const root) {
 	//ESP_LOGI(TAG, "root->type=%s", JSON_Types(root->type));
 	cJSON *current_element = NULL;
 	//ESP_LOGI(TAG, "roo->child=%p", root->child);
@@ -52,10 +52,10 @@ void JSON_Parse(const cJSON * const root) {
 			ESP_LOGI(TAG, "%s", valuestring);
 		} else if (cJSON_IsArray(current_element)) {
 			//ESP_LOGI(TAG, "Array");
-			JSON_Parse(current_element);
+			JSON_Analyze(current_element);
 		} else if (cJSON_IsObject(current_element)) {
 			//ESP_LOGI(TAG, "Object");
-			JSON_Parse(current_element);
+			JSON_Analyze(current_element);
 		} else if (cJSON_IsRaw(current_element)) {
 			ESP_LOGI(TAG, "Raw(Not support)");
 		}
@@ -82,6 +82,6 @@ void app_main()
 
 	ESP_LOGI(TAG, "Deserialize.....");
 	cJSON *root2 = cJSON_Parse(my_json_string);
-	JSON_Parse(root2);
+	JSON_Analyze(root2);
 	cJSON_Delete(root2);
 }
