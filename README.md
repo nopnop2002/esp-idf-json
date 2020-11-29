@@ -1,5 +1,5 @@
 # esp-idf-json
-Example of JSON Serialize and Deserialize in ESP-IDF
+Example of JSON Serialize and Deserialize with ESP-IDF.
 
 
 ESP-IDF includes [this](https://github.com/DaveGamble/cJSON) cJSON library (Version: 1.7.12).   
