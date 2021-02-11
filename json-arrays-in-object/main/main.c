@@ -28,7 +28,7 @@ cJSON *Create_array_of_anything(cJSON **objects,int array_num)
 	return root;
 }
 
-char *JSON_Types(int type) {
+const char *JSON_Types(int type) {
 	if (type == cJSON_Invalid) return ("cJSON_Invalid");
 	if (type == cJSON_False) return ("cJSON_False");
 	if (type == cJSON_True) return ("cJSON_True");
