@@ -69,7 +69,8 @@ void app_main()
 		height = cJSON_CreateNumber(resolution_numbers[index][1]);
 		cJSON_AddItemToArray(resolutionsHeight, height);
 	}
-	const char *my_json_string = cJSON_Print(root);
+	//const char *my_json_string = cJSON_Print(root);
+	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
 
@@ -113,4 +114,8 @@ void app_main()
 		ESP_LOGI(TAG, "resolutionsHeight[%d]=%d",i, resolutionsHeight);
 	}
 	cJSON_Delete(root2);
+
+	// Buffers returned by cJSON_Print must be freed by the caller.
+	// Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+	cJSON_free(my_json_string);
 }

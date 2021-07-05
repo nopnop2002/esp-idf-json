@@ -11,16 +11,16 @@
 static const char *TAG = "JSON";
 
 char *JSON_Types(int type) {
-    if (type == cJSON_Invalid) return ("cJSON_Invalid");
-    if (type == cJSON_False) return ("cJSON_False");
-    if (type == cJSON_True) return ("cJSON_True");
-    if (type == cJSON_NULL) return ("cJSON_NULL");
-    if (type == cJSON_Number) return ("cJSON_Number");
-    if (type == cJSON_String) return ("cJSON_String");
-    if (type == cJSON_Array) return ("cJSON_Array");
-    if (type == cJSON_Object) return ("cJSON_Object");
-    if (type == cJSON_Raw) return ("cJSON_Raw");
-    return NULL;
+	if (type == cJSON_Invalid) return ("cJSON_Invalid");
+	if (type == cJSON_False) return ("cJSON_False");
+	if (type == cJSON_True) return ("cJSON_True");
+	if (type == cJSON_NULL) return ("cJSON_NULL");
+	if (type == cJSON_Number) return ("cJSON_Number");
+	if (type == cJSON_String) return ("cJSON_String");
+	if (type == cJSON_Array) return ("cJSON_Array");
+	if (type == cJSON_Object) return ("cJSON_Object");
+	if (type == cJSON_Raw) return ("cJSON_Raw");
+	return NULL;
 }
 
 int JSON_Array(const cJSON * const item) {
@@ -30,13 +30,13 @@ int JSON_Array(const cJSON * const item) {
 		cJSON_ArrayForEach(current_element, item) {
 			//ESP_LOGI(TAG, "current_element->type=%s", JSON_Types(current_element->type));
 			if (cJSON_IsNumber(current_element)) {
-        		int valueint = current_element->valueint;
-        		double valuedouble = current_element->valuedouble;
-        		ESP_LOGI(TAG, "valueint[%d]=%d valuedouble[%d]=%f",itemNumber, valueint, itemNumber, valuedouble);
+				int valueint = current_element->valueint;
+				double valuedouble = current_element->valuedouble;
+				ESP_LOGI(TAG, "valueint[%d]=%d valuedouble[%d]=%f",itemNumber, valueint, itemNumber, valuedouble);
 			}
 			if (cJSON_IsString(current_element)) {
-        		const char* string = current_element->valuestring;
-        		ESP_LOGI(TAG, "string[%d]=%s",itemNumber, string);
+				const char* string = current_element->valuestring;
+				ESP_LOGI(TAG, "string[%d]=%s",itemNumber, string);
 			}
 			itemNumber++;
 		}
@@ -89,7 +89,8 @@ void app_main()
 	stringArray = cJSON_CreateStringArray(ptr, 3);
 	cJSON_AddItemToObject(root, "stringArray", stringArray);
 
-	const char *my_json_string = cJSON_Print(root);
+	//const char *my_json_string = cJSON_Print(root);
+	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
 
@@ -114,4 +115,8 @@ void app_main()
 	JSON_Array(stringArray2);
 
 	cJSON_Delete(root2);
+
+	// Buffers returned by cJSON_Print must be freed by the caller.
+	// Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+	cJSON_free(my_json_string);
 }

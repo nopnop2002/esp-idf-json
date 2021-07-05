@@ -20,7 +20,8 @@ void app_main()
 	cJSON_AddNumberToObject(root, "cores", chip_info.cores);
 	cJSON_AddTrueToObject(root, "flag_true");
 	cJSON_AddFalseToObject(root, "flag_false");
-	const char *my_json_string = cJSON_Print(root);
+	//const char *my_json_string = cJSON_Print(root);
+	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
 
@@ -35,4 +36,8 @@ void app_main()
 	ESP_LOGI(TAG, "flag_true=%d",flag_true);
 	ESP_LOGI(TAG, "flag_false=%d",flag_false);
 	cJSON_Delete(root2);
+
+	// Buffers returned by cJSON_Print must be freed by the caller.
+	// Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+	cJSON_free(my_json_string);
 }

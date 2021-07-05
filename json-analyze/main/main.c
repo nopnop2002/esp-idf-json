@@ -76,7 +76,8 @@ void app_main()
 	cJSON_AddFalseToObject(root, "false");
 	cJSON_AddBoolToObject(root, "bool", 0);
 	cJSON_AddNullToObject(root, "null");
-	const char *my_json_string = cJSON_Print(root);
+	//const char *my_json_string = cJSON_Print(root);
+	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
 
@@ -84,4 +85,8 @@ void app_main()
 	cJSON *root2 = cJSON_Parse(my_json_string);
 	JSON_Analyze(root2);
 	cJSON_Delete(root2);
+
+	// Buffers returned by cJSON_Print must be freed by the caller.
+	// Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+	cJSON_free(my_json_string);
 }

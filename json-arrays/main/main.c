@@ -42,14 +42,14 @@ char *JSON_Types(int type) {
 }
 
 void JSON_Array(const cJSON * const array) {
-    int id = cJSON_GetObjectItem(array,"id")->valueint;
-    char *version = cJSON_GetObjectItem(array,"version")->valuestring;
-    int cores = cJSON_GetObjectItem(array,"cores")->valueint;
-    bool flag = cJSON_GetObjectItem(array,"flag")->valueint;
-    ESP_LOGI(TAG, "id=%d",id);
-    ESP_LOGI(TAG, "version=%s",version);
-    ESP_LOGI(TAG, "cores=%d",cores);
-    ESP_LOGI(TAG, "flag=%d",flag);
+	int id = cJSON_GetObjectItem(array,"id")->valueint;
+	char *version = cJSON_GetObjectItem(array,"version")->valuestring;
+	int cores = cJSON_GetObjectItem(array,"cores")->valueint;
+	bool flag = cJSON_GetObjectItem(array,"flag")->valueint;
+	ESP_LOGI(TAG, "id=%d",id);
+	ESP_LOGI(TAG, "version=%s",version);
+	ESP_LOGI(TAG, "cores=%d",cores);
+	ESP_LOGI(TAG, "flag=%d",flag);
 }
 
 
@@ -57,7 +57,20 @@ void app_main()
 {
 	ESP_LOGI(TAG, "Serialize.....");
 	int array_num = 5;
+#if defined STATIC
+	// Static memory
+	ESP_LOGI(TAG, "Static memory");
 	cJSON *objects[5];
+#else
+	// Dynamic memory
+	ESP_LOGI(TAG, "Dynamic memory");
+	cJSON **objects = NULL;
+	objects = (cJSON **)calloc(array_num, sizeof(cJSON *));
+	if (objects == NULL) {
+		ESP_LOGE(TAG, "calloc fail");
+	}
+#endif
+
 	for(int i=0;i<array_num;i++) {
 		objects[i] = cJSON_CreateObject();
 	}
@@ -72,7 +85,8 @@ void app_main()
 		cJSON_AddNumberToObject(objects[i], "cores", chip_info.cores);
 		cJSON_AddTrueToObject(objects[i], "flag");
 	}
-	const char *my_json_string = cJSON_Print(root);
+	//const char *my_json_string = cJSON_Print(root);
+	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
 
@@ -86,4 +100,8 @@ void app_main()
 		JSON_Array(array);
 	}
 	cJSON_Delete(root2);
+
+	// Buffers returned by cJSON_Print must be freed by the caller.
+	// Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+	cJSON_free(my_json_string);
 }
