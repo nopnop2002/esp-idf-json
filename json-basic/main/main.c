@@ -27,14 +27,22 @@ void app_main()
 
 	ESP_LOGI(TAG, "Deserialize.....");
 	cJSON *root2 = cJSON_Parse(my_json_string);
-	char *version = cJSON_GetObjectItem(root2,"version")->valuestring;
-	int cores = cJSON_GetObjectItem(root2,"cores")->valueint;
-	bool flag_true = cJSON_GetObjectItem(root2,"flag_true")->valueint;
-	bool flag_false = cJSON_GetObjectItem(root2,"flag_false")->valueint;
-	ESP_LOGI(TAG, "version=%s",version);
-	ESP_LOGI(TAG, "cores=%d",cores);
-	ESP_LOGI(TAG, "flag_true=%d",flag_true);
-	ESP_LOGI(TAG, "flag_false=%d",flag_false);
+	if (cJSON_GetObjectItem(root, "version")) {
+		char *version = cJSON_GetObjectItem(root2,"version")->valuestring;
+		ESP_LOGI(TAG, "version=%s",version);
+	}
+	if (cJSON_GetObjectItem(root, "cores")) {
+		int cores = cJSON_GetObjectItem(root2,"cores")->valueint;
+		ESP_LOGI(TAG, "cores=%d",cores);
+	}
+	if (cJSON_GetObjectItem(root, "flag_true")) {
+		bool flag_true = cJSON_GetObjectItem(root2,"flag_true")->valueint;
+		ESP_LOGI(TAG, "flag_true=%d",flag_true);
+	}
+	if (cJSON_GetObjectItem(root, "flag_false")) {
+		bool flag_false = cJSON_GetObjectItem(root2,"flag_false")->valueint;
+		ESP_LOGI(TAG, "flag_false=%d",flag_false);
+	}
 	cJSON_Delete(root2);
 
 	// Buffers returned by cJSON_Print must be freed by the caller.
