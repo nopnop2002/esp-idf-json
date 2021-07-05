@@ -16,3 +16,4 @@ cd esp-idf-json/json-basic
 make flash monitor
 ```
 
+__There are no menu items to set in this project.__
