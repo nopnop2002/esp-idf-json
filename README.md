@@ -16,3 +16,7 @@ cd esp-idf-json/json-basic
 make flash monitor
 ```
 
+# About cJSON_Print
+From print_value() function, the pointer returned is allocated by cJSON_strdup()  and it is returned to the caller.   
+Buffers returned by cJSON_Print must be freed by the caller.   
+Please use the proper API (cJSON_free) rather than directly calling stdlib free.   
