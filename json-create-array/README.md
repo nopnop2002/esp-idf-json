@@ -33,3 +33,51 @@ I (423) JSON: string[2]=Mimi
 
 __JSON library does not distinguish Interger, Float, Double.__   
 __These are all parsed as numbers and stored in both Interger and Double.__
+
+## Problems with the cJSON library   
+cJSON_CreateIntArray(i_numbers, 0) causes a panic.   
+```
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_log.h"
+#include "cJSON.h"
+
+static const char *TAG = "JSON";
+
+void app_main()
+{
+        ESP_LOGI(TAG, "Serialize.....");
+        cJSON *root;
+        root = cJSON_CreateObject();
+
+        int i_numbers[3];
+        i_numbers[0] = 1;
+        i_numbers[1] = 11;
+        i_numbers[2] = 111;
+        cJSON *intArray;
+        intArray = cJSON_CreateIntArray(i_numbers, 3);
+        cJSON_AddItemToObject(root, "intArray", intArray);
+
+        char *my_json_string = cJSON_Print(root);
+        ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
+        cJSON_Delete(root);
+
+        // Buffers returned by cJSON_Print must be freed by the caller.
+        // Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+        cJSON_free(my_json_string);
+
+        cJSON *root2;
+        root2 = cJSON_CreateObject();
+        intArray = cJSON_CreateIntArray(i_numbers, 0);
+        cJSON_AddItemToObject(root2, "intArray", intArray);
+
+        char *my_json_string2 = cJSON_Print(root2);
+        ESP_LOGI(TAG, "my_json_string\n%s",my_json_string2);
+        cJSON_Delete(root2);
+
+        // Buffers returned by cJSON_Print must be freed by the caller.
+        // Please use the proper API (cJSON_free) rather than directly calling stdlib free.
+        cJSON_free(my_json_string2);
+}
+```
+
