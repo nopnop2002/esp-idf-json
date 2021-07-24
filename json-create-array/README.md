@@ -36,6 +36,7 @@ __These are all parsed as numbers and stored in both Interger and Double.__
 
 ## Problems with the cJSON library   
 cJSON_CreateIntArray(i_numbers, 0) causes a panic.   
+I can't think of a workaround at this time.   
 ```
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
