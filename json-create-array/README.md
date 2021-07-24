@@ -34,7 +34,7 @@ I (423) JSON: string[2]=Mimi
 __JSON library does not distinguish Interger, Float, Double.__   
 __These are all parsed as numbers and stored in both Interger and Double.__
 
-## Problems with the cJSON library   
+## Problems with the cJSON library version 1.7.14   
 cJSON_CreateIntArray(i_numbers, 0) causes a panic.   
 I can't think of a workaround at this time.   
 ```
