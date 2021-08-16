@@ -20,3 +20,10 @@ make flash monitor
 From print_value() function, the pointer returned is allocated by cJSON_strdup()  and it is returned to the caller.   
 Buffers returned by cJSON_Print must be freed by the caller.   
 Please use the proper API (cJSON_free) rather than directly calling stdlib free.   
+
+```
+char *my_json_string = cJSON_Print(root);
+ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
+cJSON_Delete(root);
+cJSON_free(my_json_string);
+```
