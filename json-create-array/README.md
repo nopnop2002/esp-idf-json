@@ -83,7 +83,7 @@ void app_main()
 ```
 
 It works fine in version 1.7.15.   
-Version 1.7.15 is Included in ESP-IDF version v4.4-dev-2825-gb63ec47238 and later.   
+Version 1.7.15 is Included in ESP-IDF version v4.4-dev-2825-gb63ec47238 or later.   
 ```
 I (0) cpu_start: Starting scheduler on APP CPU.
 I (326) JSON: Serialize.....
