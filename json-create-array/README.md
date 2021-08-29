@@ -35,8 +35,8 @@ __JSON library does not distinguish Interger, Float, Double.__
 __These are all parsed as numbers and stored in both Interger and Double.__
 
 ## Problems with the cJSON library version 1.7.14   
-cJSON_CreateIntArray(i_numbers, 0) causes a panic.   
-I can't think of a workaround at this time.   
+In Version 1.7.14, cJSON_CreateIntArray(i_numbers, 0) causes a panic.   
+You need to update to version 1.7.15.   
 ```
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -82,3 +82,17 @@ void app_main()
 }
 ```
 
+It works fine in version 1.7.15.   
+Version 1.7.15 is Included in ESP-IDF version v4.4-dev-2825-gb63ec47238 and later.   
+```
+I (0) cpu_start: Starting scheduler on APP CPU.
+I (326) JSON: Serialize.....
+I (336) JSON: my_json_string
+{
+        "intArray":     [1, 11, 111]
+}
+I (336) JSON: my_json_string
+{
+        "intArray":     []
+}
+```
