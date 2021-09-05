@@ -2,7 +2,7 @@
 Example of JSON Serialize and Deserialize with ESP-IDF.
 
 
-ESP-IDF includes [this](https://github.com/DaveGamble/cJSON) cJSON library (Version: 1.7.12).   
+ESP-IDF includes [this](https://github.com/DaveGamble/cJSON) cJSON library.   
 You can use JSON components as standard.   
 But the documentation is very poor.   
 The official documentation for the JSON component is [here](https://github.com/espressif/esp-idf/tree/master/components/json/README).
