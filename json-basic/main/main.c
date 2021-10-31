@@ -27,19 +27,19 @@ void app_main()
 
 	ESP_LOGI(TAG, "Deserialize.....");
 	cJSON *root2 = cJSON_Parse(my_json_string);
-	if (cJSON_GetObjectItem(root, "version")) {
+	if (cJSON_GetObjectItem(root2, "version")) {
 		char *version = cJSON_GetObjectItem(root2,"version")->valuestring;
 		ESP_LOGI(TAG, "version=%s",version);
 	}
-	if (cJSON_GetObjectItem(root, "cores")) {
+	if (cJSON_GetObjectItem(root2, "cores")) {
 		int cores = cJSON_GetObjectItem(root2,"cores")->valueint;
 		ESP_LOGI(TAG, "cores=%d",cores);
 	}
-	if (cJSON_GetObjectItem(root, "flag_true")) {
+	if (cJSON_GetObjectItem(root2, "flag_true")) {
 		bool flag_true = cJSON_GetObjectItem(root2,"flag_true")->valueint;
 		ESP_LOGI(TAG, "flag_true=%d",flag_true);
 	}
-	if (cJSON_GetObjectItem(root, "flag_false")) {
+	if (cJSON_GetObjectItem(root2, "flag_false")) {
 		bool flag_false = cJSON_GetObjectItem(root2,"flag_false")->valueint;
 		ESP_LOGI(TAG, "flag_false=%d",flag_false);
 	}
