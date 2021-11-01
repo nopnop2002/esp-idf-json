@@ -13,7 +13,7 @@ The official documentation for the JSON component is [here](https://github.com/e
 ```
 git clone https://github.com/nopnop2002/esp-idf-json
 cd esp-idf-json/json-basic
-make flash monitor
+idf.py flash monitor
 ```
 
 # About cJSON_Print
