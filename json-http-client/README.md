@@ -39,8 +39,8 @@ $ json-server --watch --host {My_IP_Address} db.json
 
 ## Build ESP-IDF Project
 ```
-$ make menuconfig
-$ make flash monitor
+$ idf.py menuconfig
+$ idf.py flash monitor
 ```
 
 ![menuconfig-1](https://user-images.githubusercontent.com/6020549/71557211-3d42e580-2a86-11ea-804b-f25373ce589f.jpg)
