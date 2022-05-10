@@ -39,27 +39,30 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 {
 	switch(evt->event_id) {
 		case HTTP_EVENT_ERROR:
-			ESP_LOGI(TAG, "HTTP_EVENT_ERROR");
+			ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
 			break;
 		case HTTP_EVENT_ON_CONNECTED:
-			ESP_LOGI(TAG, "HTTP_EVENT_ON_CONNECTED");
+			ESP_LOGD(TAG, "HTTP_EVENT_ON_CONNECTED");
 			break;
 		case HTTP_EVENT_HEADER_SENT:
-			ESP_LOGI(TAG, "HTTP_EVENT_HEADER_SENT");
+			ESP_LOGD(TAG, "HTTP_EVENT_HEADER_SENT");
 			break;
 		case HTTP_EVENT_ON_HEADER:
 			ESP_LOGD(TAG, "HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
 			break;
 		case HTTP_EVENT_ON_DATA:
-			ESP_LOGI(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
+			ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, evt->data_len=%d", evt->data_len);
 			if (!esp_http_client_is_chunked_response(evt->client)) {
+				ESP_LOG_BUFFER_HEXDUMP(TAG, evt->data, evt->data_len, ESP_LOG_DEBUG);
 				//char buffer[512];
 				char *buffer = malloc(evt->data_len + 1);
-				esp_http_client_read(evt->client, buffer, evt->data_len);
+				//esp_http_client_read(evt->client, buffer, evt->data_len);
+				memcpy(buffer, evt->data, evt->data_len);
 				buffer[evt->data_len] = 0;
 				//ESP_LOGI(TAG, "buffer=%s", buffer);
 				//UBaseType_t res = xRingbufferSend(xRingbuffer, buffer, evt->data_len, pdMS_TO_TICKS(1000));
 				UBaseType_t res = xRingbufferSendFromISR(xRingbuffer, buffer, evt->data_len, NULL);
+				ESP_LOGD(TAG, "xRingbufferSendFromISR res=%d", res);
 				if (res != pdTRUE) {
 					ESP_LOGE(TAG, "Failed to xRingbufferSend");
 				}
@@ -67,10 +70,10 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 			}
 			break;
 		case HTTP_EVENT_ON_FINISH:
-			ESP_LOGI(TAG, "HTTP_EVENT_ON_FINISH");
+			ESP_LOGD(TAG, "HTTP_EVENT_ON_FINISH");
 			break;
 		case HTTP_EVENT_DISCONNECTED:
-			ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
+			ESP_LOGD(TAG, "HTTP_EVENT_DISCONNECTED");
 			break;
 		case HTTP_EVENT_REDIRECT:
 			ESP_LOGD(TAG, "HTTP_EVENT_REDIRECT");
@@ -237,7 +240,7 @@ void http_client(char * url)
 	// GET
 	esp_err_t err = esp_http_client_perform(client);
 	if (err == ESP_OK) {
-		ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
+		ESP_LOGD(TAG, "HTTP GET Status = %d, content_length = %lld",
 				esp_http_client_get_status_code(client),
 				esp_http_client_get_content_length(client));
 		//Receive an item from no-split ring buffer
@@ -263,7 +266,7 @@ void http_client(char * url)
 				break;
 			}
 		}
-		ESP_LOGI(TAG, "buffer=\n%s", buffer);
+		ESP_LOGI(TAG, "buffer...\n%s", buffer);
 
 		ESP_LOGI(TAG, "Deserialize.....");
 		cJSON *root = cJSON_Parse(buffer);
