@@ -4,7 +4,7 @@ DeSerialize JOSN message received by HTTP.
 
 ## Install JSON (Fake REST) Server on your host
 ```
-$ sudo apt-get install npm
+$ sudo apt install npm
 
 $ sudo npm install -g json-server
 ```
