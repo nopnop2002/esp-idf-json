@@ -18,6 +18,8 @@ idf.py flash monitor
 ![config-top-http-client2](https://user-images.githubusercontent.com/6020549/167752797-15918c8b-996b-4fa8-84e3-8f3fcff098f8.jpg)
 ![config-app-http-client2](https://user-images.githubusercontent.com/6020549/167752802-98adb244-0c82-40cb-a1e9-d4b0e3333ad5.jpg)
 
+WOEID(Where On Earth IDentifire) can be changed according to the area where you live.   
+
 # How to get WOEID
 How to use location search:   
 https://www.metaweather.com/api/#locationsearch.   
