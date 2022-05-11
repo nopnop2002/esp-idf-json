@@ -43,9 +43,8 @@ $ idf.py menuconfig
 $ idf.py flash monitor
 ```
 
-![menuconfig-1](https://user-images.githubusercontent.com/6020549/71557211-3d42e580-2a86-11ea-804b-f25373ce589f.jpg)
-
-![menuconfig-2](https://user-images.githubusercontent.com/6020549/71557214-416f0300-2a86-11ea-9574-051a7862d4e2.jpg)
+![config-app-http-client1](https://user-images.githubusercontent.com/6020549/167751997-071eec15-36c6-4159-bcd1-850a605277fb.jpg)
+![config-top-http-client1](https://user-images.githubusercontent.com/6020549/167752001-36383f6a-17cd-44e1-9550-49883fc1d408.jpg)
 
 ## Console output
 ```
