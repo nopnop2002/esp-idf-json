@@ -1,6 +1,8 @@
 # JSON Example
 
 DeSerialize JOSN message received by HTTP.   
+This project gets JSON data from Fake REST Server.   
+
 
 # Install JSON (Fake REST) Server on your host
 ```
