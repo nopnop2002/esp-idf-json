@@ -1,6 +1,7 @@
 # JSON Example
 
 DeSerialize JOSN message received by HTTP.   
+This project gets JSON data from https://www.metaweather.com/.   
 
 # Installation
 
