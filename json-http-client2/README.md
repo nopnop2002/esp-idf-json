@@ -119,7 +119,7 @@ https://www.metaweather.com/api/location/search/?query=kyo
 ```
 
 WOEID of TOKYO is 1118370.   
-You can know the weather forecast of TOKYO.   
+You can know the weather forecast of TOKYO by JSON format.   
 https://www.metaweather.com/api/location/1118370/   
 
 
