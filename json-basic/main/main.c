@@ -5,6 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
+#include "esp_chip_info.h"
 #include "cJSON.h"
 
 static const char *TAG = "JSON";
