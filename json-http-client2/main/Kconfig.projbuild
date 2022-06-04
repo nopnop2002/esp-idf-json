@@ -18,10 +18,10 @@ menu "Application Configuration"
 		help
 			Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
 
-  config ESP_WOEID
-    int "Where On Earth IDentifier"
-    default 1118370
-    help
-      Set the WOEID of the place where you want the weather forecast.
+	config ESP_LOCATION
+		string "Desired location"
+		default "tokyo"
+		help
+			Set your desired location like newyork, london, california
 
 endmenu

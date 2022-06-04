@@ -377,11 +377,12 @@ void app_main()
 	ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
 	wifi_init_sta();
 
-	// Get Weather Information from www.metaweather.com
-	ESP_LOGI(TAG, "woeid=%d",CONFIG_ESP_WOEID);
+	// Get Weather Information from weatherdbi.herokuapp.com
+	ESP_LOGI(TAG, "location=%s",CONFIG_ESP_LOCATION);
 	char url[64];
-	//https://www.metaweather.com/api/location/1118370/
-	sprintf(url, "http://www.metaweather.com/api/location/%d/", CONFIG_ESP_WOEID);
+	//sprintf(url, "https://weatherdbi.herokuapp.com/data/weather/newyork");
+	//sprintf(url, "https://weatherdbi.herokuapp.com/data/weather/tokyo");
+	sprintf(url, "https://weatherdbi.herokuapp.com/data/weather/%s", CONFIG_ESP_LOCATION);
 	ESP_LOGI(TAG, "url=%s",url);
 	http_client(url); 
 }
