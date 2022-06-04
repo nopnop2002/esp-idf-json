@@ -12,7 +12,7 @@ The official documentation for the JSON component is [here](https://github.com/e
 # How to use
 ```
 git clone https://github.com/nopnop2002/esp-idf-json
-cd esp-idf-json/json-basic
+cd esp-idf-json/json-basic-object
 idf.py flash monitor
 ```
 
