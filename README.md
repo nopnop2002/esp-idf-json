@@ -38,10 +38,12 @@ Array, like this, have no name.
 Object, like this, have name.
 ```
 {
-        "version":      "v4.1-dev-1572-g30372f5a4",
+        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
         "cores":        2,
 }
 ```
+
+# Complex structure   
 
 - Object in Array   
 ```
@@ -50,6 +52,19 @@ Object, like this, have name.
                 "cores":        2
         }]
 ```
+
+```
+[{
+                "id":   0,
+                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+                "cores":        2
+        }, {
+                "id":   1,
+                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+                "cores":        2
+        }]
+```
+
 
 - Array in Object   
 ```
@@ -60,6 +75,24 @@ Object, like this, have name.
 }
 ```
 
+- Object in Array in Object   
+
+```
+{
+        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+        "cores":        2,
+        "array":  [{
+                        "width":        1280,
+                        "height":       720
+                }, {
+                        "width":        1920,
+                        "height":       1080
+                }, {
+                        "width":        3840,
+                        "height":       2160
+                }]
+}
+```
 
 
 # API
