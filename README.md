@@ -80,8 +80,28 @@ Object starts with { and ends with }.
 }
 ```
 
-- Object in Array in Object   
+- Object in Object   
+```
+{
+        "name": "Jack (\"Bee\") Nimble",
+        "format":       {
+                "type": "rect",
+                "width":        1920,
+                "height":       1080,
+                "interlace":    false,
+                "frame rate":   24
+        }
+}
+```
 
+- Array in Array   
+```
+[["abc", 120], ["abc", 121], ["abc", 122], ["abc", 123], ["abc", 124], ["abc", 125], ["abc", 126], ["abc", 127], ["abc", 128], ["abc", 129]]
+```
+
+
+
+- Object in Array in Object   
 ```
 {
         "version":      "v5.0-dev-3202-ga2d5041492-dirty",
@@ -96,21 +116,6 @@ Object starts with { and ends with }.
                         "width":        3840,
                         "height":       2160
                 }]
-}
-```
-
-- Object in Object   
-
-```
-{
-        "name": "Jack (\"Bee\") Nimble",
-        "format":       {
-                "type": "rect",
-                "width":        1920,
-                "height":       1080,
-                "interlace":    false,
-                "frame rate":   24
-        }
 }
 ```
 
