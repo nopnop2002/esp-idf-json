@@ -99,6 +99,21 @@ Object starts with { and ends with }.
 }
 ```
 
+- Object in Object   
+
+```
+{
+        "name": "Jack (\"Bee\") Nimble",
+        "format":       {
+                "type": "rect",
+                "width":        1920,
+                "height":       1080,
+                "interlace":    false,
+                "frame rate":   24
+        }
+}
+```
+
 
 # API
 API is [here](https://cjson.docsforge.com/master/api/)
