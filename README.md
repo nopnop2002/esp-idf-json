@@ -27,6 +27,8 @@ ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 cJSON_Delete(root);
 cJSON_free(my_json_string);
 ```
+
+
 # Basic Structure   
 - Array   
 Array, like this, have no name.    
