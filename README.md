@@ -27,6 +27,40 @@ ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 cJSON_Delete(root);
 cJSON_free(my_json_string);
 ```
+# Basic Structure   
+- Array
+Array, like this, have no name.    
+```
+["abc", 123, true, false, null]
+```
+
+- Object
+Onject, like this, have name.
+```
+{
+        "version":      "v4.1-dev-1572-g30372f5a4",
+        "cores":        2,
+}
+```
+
+- Object in Array
+```
+["abc", 123, true, false, null, {
+                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+                "cores":        2
+        }]
+```
+
+- Array in Object
+```
+{
+        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+        "cores":        2,
+        "array":        ["abc", 123, true, false, null]
+}
+```
+
+
 
 # API
 API is [here](https://cjson.docsforge.com/master/api/)
