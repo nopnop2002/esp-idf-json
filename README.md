@@ -28,13 +28,13 @@ cJSON_Delete(root);
 cJSON_free(my_json_string);
 ```
 # Basic Structure   
-- Array
+- Array   
 Array, like this, have no name.    
 ```
 ["abc", 123, true, false, null]
 ```
 
-- Object
+- Object   
 Onject, like this, have name.
 ```
 {
@@ -43,7 +43,7 @@ Onject, like this, have name.
 }
 ```
 
-- Object in Array
+- Object in Array   
 ```
 ["abc", 123, true, false, null, {
                 "version":      "v5.0-dev-3202-ga2d5041492-dirty",
@@ -51,7 +51,7 @@ Onject, like this, have name.
         }]
 ```
 
-- Array in Object
+- Array in Object   
 ```
 {
         "version":      "v5.0-dev-3202-ga2d5041492-dirty",
