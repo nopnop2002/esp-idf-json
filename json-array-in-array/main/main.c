@@ -41,18 +41,17 @@ void app_main()
 	cJSON *root;
 	root = cJSON_CreateArray();
 
-	cJSON *array[10];
+	cJSON *array;
 	cJSON *element;
 
 	int array_num = 10;
 	for (int i=0;i<array_num;i++) {
-		array[i] = cJSON_CreateArray();
+		array = cJSON_CreateArray();
 		element = cJSON_CreateString("abc");
-		cJSON_AddItemToArray(array[i], element);
+		cJSON_AddItemToArray(array, element);
 		element = cJSON_CreateNumber(120+i);
-		cJSON_AddItemToArray(array[i], element);
-		cJSON_AddItemToArray(root, array[i]);
-		//cJSON_Delete(array);
+		cJSON_AddItemToArray(array, element);
+		cJSON_AddItemToArray(root, array);
 	}
 	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
