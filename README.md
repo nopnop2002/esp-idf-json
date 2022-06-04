@@ -32,12 +32,15 @@ cJSON_free(my_json_string);
 # Basic Structure   
 - Array   
 Array, like this, have no name.    
+Array starts with [ and ends with ].   
 ```
 ["abc", 123, true, false, null]
 ```
 
 - Object   
-Object, like this, have name.
+Object, like this, have name.   
+Object starts with { and ends with }.   
+
 ```
 {
         "version":      "v5.0-dev-3202-ga2d5041492-dirty",
