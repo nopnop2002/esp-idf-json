@@ -35,7 +35,7 @@ Array, like this, have no name.
 ```
 
 - Object   
-Onject, like this, have name.
+Object, like this, have name.
 ```
 {
         "version":      "v4.1-dev-1572-g30372f5a4",
