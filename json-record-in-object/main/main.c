@@ -10,39 +10,7 @@
 
 static const char *TAG = "JSON";
 
-
-// Create array
-cJSON *Create_array_of_anything(cJSON **objects,int array_num)
-{
-	cJSON *prev = 0;
-	cJSON *root;
-	root = cJSON_CreateArray();
-	for (int i=0;i<array_num;i++) {
-		if (!i)	{
-			root->child=objects[i];
-		} else {
-			prev->next=objects[i];
-			objects[i]->prev=prev;
-		}
-		prev=objects[i];
-	}
-	return root;
-}
-
-char *JSON_Types(int type) {
-	if (type == cJSON_Invalid) return ("cJSON_Invalid");
-	if (type == cJSON_False) return ("cJSON_False");
-	if (type == cJSON_True) return ("cJSON_True");
-	if (type == cJSON_NULL) return ("cJSON_NULL");
-	if (type == cJSON_Number) return ("cJSON_Number");
-	if (type == cJSON_String) return ("cJSON_String");
-	if (type == cJSON_Array) return ("cJSON_Array");
-	if (type == cJSON_Object) return ("cJSON_Object");
-	if (type == cJSON_Raw) return ("cJSON_Raw");
-	return NULL;
-}
-
-void JSON_Array(const cJSON * const array) {
+void JSON_Print(const cJSON * const array) {
 	int id = cJSON_GetObjectItem(array,"id")->valueint;
 	char *version = cJSON_GetObjectItem(array,"version")->valuestring;
 	int cores = cJSON_GetObjectItem(array,"cores")->valueint;
@@ -60,21 +28,20 @@ void app_main()
 	cJSON *root;
 	root = cJSON_CreateObject();
 
-	int array_num = 5;
-	cJSON *objects[5];
-	for(int i=0;i<array_num;i++) {
-		objects[i] = cJSON_CreateObject();
-	}
 	cJSON *array;
-	array = Create_array_of_anything(objects, array_num);
+	array= cJSON_CreateArray();
+
 	esp_chip_info_t chip_info;
 	esp_chip_info(&chip_info);
-
+	cJSON *object;
+	int array_num = 5;
 	for (int i=0;i<array_num;i++) {
-		cJSON_AddNumberToObject(objects[i], "id", i);
-		cJSON_AddStringToObject(objects[i], "version", IDF_VER);
-		cJSON_AddNumberToObject(objects[i], "cores", chip_info.cores);
-		cJSON_AddTrueToObject(objects[i], "flag");
+		object = cJSON_CreateObject();
+		cJSON_AddNumberToObject(object, "id", i);
+		cJSON_AddStringToObject(object, "version", IDF_VER);
+		cJSON_AddNumberToObject(object, "cores", chip_info.cores);
+		cJSON_AddTrueToObject(object, "flag");
+		cJSON_AddItemToArray(array, object);
 	}
 
 	cJSON_AddItemToObject(root, "records", array);
@@ -94,7 +61,7 @@ void app_main()
 	for (int i=0;i<records_array_size;i++) {
 		cJSON *array = cJSON_GetArrayItem(records,i);
 		//ESP_LOGI(TAG, "array->type=%s", JSON_Types(array->type));
-		JSON_Array(array);
+		JSON_Print(array);
 	}
 	cJSON_Delete(root2);
 
