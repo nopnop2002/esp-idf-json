@@ -27,3 +27,7 @@ ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 cJSON_Delete(root);
 cJSON_free(my_json_string);
 ```
+
+# API
+API is [here](https://cjson.docsforge.com/master/api/)
+
