@@ -103,6 +103,7 @@ element is added by cJSON_AddItemToObject.
 }
 ```
 
+# More Complex structure   
 
 - Object in Array in Object   
 ```
@@ -122,6 +123,20 @@ element is added by cJSON_AddItemToObject.
 }
 ```
 
+- Array in object in array   
+```
+[{
+                "id":   0,
+                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+                "cores":        2,
+                "array":        ["abc", 123, true, false, null]
+        }, {
+                "id":   1,
+                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+                "cores":        2,
+                "array":        ["abc", 123, true, false, null]
+        }]
+```
 
 # API
 API is [here](https://cjson.docsforge.com/master/api/)
