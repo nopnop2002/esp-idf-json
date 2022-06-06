@@ -33,6 +33,8 @@ cJSON_free(my_json_string);
 - Array   
 Array, like this, have no name.    
 Array starts with [ and ends with ].   
+root is defined by cJSON_CreateArray.   
+element is added by cJSON_AddItemToArray.   
 ```
 ["abc", 123, true, false, null]
 ```
@@ -40,7 +42,8 @@ Array starts with [ and ends with ].
 - Object   
 Object, like this, have name.   
 Object starts with { and ends with }.   
-
+root is defined by cJSON_CreateObject.   
+element is added by cJSON_AddItemToObject.   
 ```
 {
         "version":      "v5.0-dev-3202-ga2d5041492-dirty",
@@ -70,15 +73,12 @@ Object starts with { and ends with }.
         }]
 ```
 
+- Array in Array   
+```
+[["abc", 120], ["abc", 121], ["abc", 122], ["abc", 123], ["abc", 124], ["abc", 125], ["abc", 126], ["abc", 127], ["abc", 128], ["abc", 129]]
+```
 
-- Array in Object   
-```
-{
-        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-        "cores":        2,
-        "array":        ["abc", 123, true, false, null]
-}
-```
+
 
 - Object in Object   
 ```
@@ -94,11 +94,14 @@ Object starts with { and ends with }.
 }
 ```
 
-- Array in Array   
+- Array in Object   
 ```
-[["abc", 120], ["abc", 121], ["abc", 122], ["abc", 123], ["abc", 124], ["abc", 125], ["abc", 126], ["abc", 127], ["abc", 128], ["abc", 129]]
+{
+        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+        "cores":        2,
+        "array":        ["abc", 123, true, false, null]
+}
 ```
-
 
 
 - Object in Array in Object   
