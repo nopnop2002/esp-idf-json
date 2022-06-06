@@ -123,7 +123,7 @@ element is added by cJSON_AddItemToObject.
 }
 ```
 
-- Array in object in array   
+- Array in Object in Array   
 ```
 [{
                 "id":   0,
