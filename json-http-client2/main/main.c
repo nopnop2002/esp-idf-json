@@ -32,18 +32,29 @@ static const char *TAG = "JSON";
 
 static int s_retry_num = 0;
 
-/* Root cert for metaweather.com, taken from metaweather_com_root_cert.pem
+/* Constants that aren't configurable in menuconfig */
+#define WEB_SERVER "www.howsmyssl.com"
+#define WEB_PORT "443"
+#define WEB_URL "https://www.howsmyssl.com/a/check"
 
-	 The PEM file was extracted from the output of this command:
-	 openssl s_client -showcerts -connect www.metaweather.com:443 </dev/null
+static const char HOWSMYSSL_REQUEST[] = "GET " WEB_URL " HTTP/1.1\r\n"
+	"Host: "WEB_SERVER"\r\n"
+	"User-Agent: esp-idf/1.0 esp32\r\n"
+	"\r\n";
 
-	 The CA root cert is the last cert given in the chain of certs.
+/*
+	Root cert for metaweather.com, taken from metaweather_com_root_cert.pem
 
-	 To embed it in the app binary, the PEM file is named
-	 in the component.mk COMPONENT_EMBED_TXTFILES variable.
+	The PEM file was extracted from the output of this command:
+	openssl s_client -showcerts -connect jsonplaceholder.typicode.com.com:443 </dev/null
+
+	The CA root cert is the last cert given in the chain of certs.
+
+	To embed it in the app binary, the PEM file is named
+	in the component.mk COMPONENT_EMBED_TXTFILES variable.
 */
-extern const char metaweather_com_root_cert_pem_start[] asm("_binary_metaweather_com_root_cert_pem_start");
-extern const char metaweather_com_root_cert_pem_end[]	asm("_binary_metaweather_com_root_cert_pem_end");
+extern const uint8_t server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
+extern const uint8_t server_root_cert_pem_end[]   asm("_binary_server_root_cert_pem_end");
 
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)
@@ -116,8 +127,7 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 	return ESP_OK;
 }
 
-static void event_handler(void* arg, esp_event_base_t event_base,
-																int32_t event_id, void* event_data)
+static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
 {
 	if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
 		esp_wifi_connect();
@@ -153,15 +163,15 @@ void wifi_init_sta(void)
 	esp_event_handler_instance_t instance_any_id;
 	esp_event_handler_instance_t instance_got_ip;
 	ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
-									ESP_EVENT_ANY_ID,
-									&event_handler,
-									NULL,
-									&instance_any_id));
+		ESP_EVENT_ANY_ID,
+		&event_handler,
+		NULL,
+		&instance_any_id));
 	ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
-									IP_EVENT_STA_GOT_IP,
-									&event_handler,
-									NULL,
-									&instance_got_ip));
+		IP_EVENT_STA_GOT_IP,
+		&event_handler,
+		NULL,
+		&instance_got_ip));
 
 	wifi_config_t wifi_config = {
 		.sta = {
@@ -261,112 +271,190 @@ void JSON_Analyze(const cJSON * const root) {
 	}
 }
 
-size_t http_client_content_length(char * url)
+static size_t https_get_request(int request, esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, const char *REQUEST, char *content)
 {
-	ESP_LOGI(TAG, "http_client_content_length url=%s",url);
-	size_t content_length;
-	
-	esp_http_client_config_t config = {
-		.url = url,
-		.event_handler = _http_event_handler,
-		//.user_data = local_response_buffer,			 // Pass address of local buffer to get response
-		.cert_pem = metaweather_com_root_cert_pem_start,
-	};
-	esp_http_client_handle_t client = esp_http_client_init(&config);
+	char buf[512];
+	int ret, len;
+	size_t content_length = 0;
+	int index = 0;
+	int header_flag = 0;
 
-	// GET
-	esp_err_t err = esp_http_client_perform(client);
-	if (err == ESP_OK) {
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
-		ESP_LOGD(TAG, "HTTP GET Status = %d, content_length = %lld",
-#else
-		ESP_LOGD(TAG, "HTTP GET Status = %d, content_length = %d",
-#endif
-				esp_http_client_get_status_code(client),
-				esp_http_client_get_content_length(client));
-		content_length = esp_http_client_get_content_length(client);
-
-	} else {
-		ESP_LOGW(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
-		content_length = 0;
+	esp_tls_t *tls = esp_tls_init();
+	if (!tls) {
+		ESP_LOGE(TAG, "Failed to allocate esp_tls handle!");
+		return 0;
 	}
-	esp_http_client_cleanup(client);
+
+	if (esp_tls_conn_http_new_sync(WEB_SERVER_URL, &cfg, tls) == 1) {
+		ESP_LOGI(TAG, "Connection established...");
+	} else {
+		ESP_LOGE(TAG, "Connection failed...");
+		goto exit;
+	}
+#else
+	struct esp_tls *tls = esp_tls_conn_http_new(WEB_SERVER_URL, &cfg);
+
+	if (tls != NULL) {
+		ESP_LOGI(TAG, "Connection established...");
+	} else {
+		ESP_LOGE(TAG, "Connection failed...");
+		goto exit;
+	}
+#endif
+
+	size_t written_bytes = 0;
+	do {
+		ret = esp_tls_conn_write(tls,
+								 REQUEST + written_bytes,
+								 strlen(REQUEST) - written_bytes);
+		if (ret >= 0) {
+			ESP_LOGI(TAG, "%d bytes written", ret);
+			written_bytes += ret;
+		} else if (ret != ESP_TLS_ERR_SSL_WANT_READ  && ret != ESP_TLS_ERR_SSL_WANT_WRITE) {
+			ESP_LOGE(TAG, "esp_tls_conn_write  returned: [0x%02X](%s)", ret, esp_err_to_name(ret));
+			goto exit;
+		}
+	} while (written_bytes < strlen(REQUEST));
+
+	ESP_LOGI(TAG, "Reading HTTP response...");
+
+	do {
+		len = sizeof(buf) - 1;
+		memset(buf, 0x00, sizeof(buf));
+		ret = esp_tls_conn_read(tls, buf, len);
+
+		if (ret == ESP_TLS_ERR_SSL_WANT_WRITE  || ret == ESP_TLS_ERR_SSL_WANT_READ) {
+			continue;
+		}
+
+		if (ret < 0) {
+			ESP_LOGE(TAG, "esp_tls_conn_read  returned [-0x%02X](%s)", -ret, esp_err_to_name(ret));
+			break;
+		}
+
+		if (ret == 0) {
+			ESP_LOGI(TAG, "connection closed");
+			break;
+		}
+
+		ESP_LOGI(TAG, "%d bytes read", ret);
+
+		char *addr;
+		if (request == 0) {
+			addr = strstr(buf, "Content-Length:");
+			ESP_LOGI(TAG, "addr=%p", addr);
+			if (addr != NULL) {
+				char wk[32];
+				memset(wk, 0x00, sizeof(wk));
+				for (int i=0;i<32;i++) {
+					ESP_LOGI(TAG, "addr[i+16]=0x%x", addr[i+16]);
+					wk[i] = addr[i+16];
+					if (addr[i+17] == 0x0d) break;
+				}
+				content_length = atoi(wk);
+				ESP_LOGI(TAG, "wk=[%s] content_length=%d", wk, content_length);
+				break;
+			} 
+		} else {
+			int start = 0;
+			if (header_flag == 0) {
+				int marker = 0;
+				for (int i = 0; i < ret; i++) {
+					ESP_LOGD(TAG, "buf[%d]=0x%x", i, buf[i]);
+					if (buf[i] == 0x0d) {
+						marker++;
+					} else if (buf[i] == 0x0a) {
+						marker++;
+						ESP_LOGD(TAG, "marker=%d", marker);
+						if (marker == 4) {
+							start = i+1;
+							header_flag = 1;
+							break;
+						}
+					} else {
+						marker = 0;
+					}
+				}
+			}
+			ESP_LOGI(TAG, "start=%d", start);
+			for (int i = start; i < ret; i++) {
+				content[index++] = buf[i];
+				content[index] = 0x00;
+			}
+			ESP_LOGI(TAG, "index=%d", index);
+		}
+
+		/* Print response directly to stdout as it is read */
+		for (int i = 0; i < ret; i++) {
+			putchar(buf[i]);
+		}
+		putchar('\n'); // JSON output doesn't have a newline at end
+	} while (1);
+
+exit:
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+	esp_tls_conn_destroy(tls);
+#else
+	esp_tls_conn_delete(tls);
+#endif
 	return content_length;
 }
 
-esp_err_t http_client_content_get(char * url, char * response_buffer)
+
+size_t http_client_content_length()
 {
-	ESP_LOGI(TAG, "http_client_content_get url=%s",url);
-
-	esp_http_client_config_t config = {
-		.url = url,
-		.event_handler = _http_event_handler,
-		.user_data = response_buffer,			 // Pass address of local buffer to get response
-		.cert_pem = metaweather_com_root_cert_pem_start,
+	esp_tls_cfg_t cfg = {
+		.cacert_buf = (const unsigned char *) server_root_cert_pem_start,
+		.cacert_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
 	};
-	esp_http_client_handle_t client = esp_http_client_init(&config);
-
-	// GET
-	esp_err_t err = esp_http_client_perform(client);
-	if (err == ESP_OK) {
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
-		ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
-#else
-		ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %d",
-#endif
-				esp_http_client_get_status_code(client),
-				esp_http_client_get_content_length(client));
-		ESP_LOGD(TAG, "\n%s", response_buffer);
-	} else {
-		ESP_LOGW(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
-	}
-	esp_http_client_cleanup(client);
-	return err;
+	size_t content_length = https_get_request(0, cfg, WEB_URL, HOWSMYSSL_REQUEST, NULL);
+	return content_length;
 }
 
-void http_client(char * url)
+size_t http_client_content_body(char * buf)
 {
-	// Get content length from event handler
+	esp_tls_cfg_t cfg = {
+		.cacert_buf = (const unsigned char *) server_root_cert_pem_start,
+		.cacert_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
+	};
+	size_t content_length = https_get_request(1, cfg, WEB_URL, HOWSMYSSL_REQUEST, buf);
+	return content_length;
+}
+
+void http_client()
+{
+	// Get content length
 	size_t content_length;
-	while (1) {
-		content_length = http_client_content_length(url);
-		ESP_LOGI(TAG, "content_length=%d", content_length);
-		if (content_length > 0) break;
-		vTaskDelay(100);
-	}
+	content_length = http_client_content_length();
+	ESP_LOGI(TAG, "content_length=%d", content_length);
 
 	// Allocate buffer to store response of http request from event handler
-	char *response_buffer;
-	response_buffer = (char *) malloc(content_length+1);
-	if (response_buffer == NULL) {
+	char *buffer;
+	buffer = (char *) malloc(content_length+1);
+	if (buffer == NULL) {
 		ESP_LOGE(TAG, "Failed to allocate memory for output buffer");
 		while(1) {
 			vTaskDelay(1);
 		}
 	}
-	bzero(response_buffer, content_length+1);
 
-	// Get content from event handler
-	while(1) {
-		esp_err_t err = http_client_content_get(url, response_buffer);
-		if (err == ESP_OK) break;
-		vTaskDelay(100);
-	}
-	ESP_LOGD(TAG, "content_length=%d", content_length);
-	ESP_LOGD(TAG, "\n[%s]", response_buffer);
+	// Get content body
+	http_client_content_body(buffer);
+	ESP_LOGI(TAG, "\n[%s]", buffer);
 
 	// Deserialize JSON
 	ESP_LOGI(TAG, "Deserialize.....");
-	cJSON *root = cJSON_Parse(response_buffer);
+	cJSON *root = cJSON_Parse(buffer);
 	JSON_Analyze(root);
 	cJSON_Delete(root);
-	free(response_buffer);
+	free(buffer);
 }
 
 
 void app_main()
 {
-	//Initialize NVS
+	// Initialize NVS
 	esp_err_t ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
 		ESP_ERROR_CHECK(nvs_flash_erase());
@@ -374,15 +462,9 @@ void app_main()
 	}
 	ESP_ERROR_CHECK(ret);
 
-	ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+	// Initialize WiFi
 	wifi_init_sta();
 
-	// Get Weather Information from weatherdbi.herokuapp.com
-	ESP_LOGI(TAG, "location=%s",CONFIG_ESP_LOCATION);
-	char url[64];
-	//sprintf(url, "https://weatherdbi.herokuapp.com/data/weather/newyork");
-	//sprintf(url, "https://weatherdbi.herokuapp.com/data/weather/tokyo");
-	sprintf(url, "https://weatherdbi.herokuapp.com/data/weather/%s", CONFIG_ESP_LOCATION);
-	ESP_LOGI(TAG, "url=%s",url);
-	http_client(url); 
+	// http client request
+	http_client(); 
 }

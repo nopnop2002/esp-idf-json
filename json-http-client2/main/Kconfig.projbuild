@@ -18,10 +18,4 @@ menu "Application Configuration"
 		help
 			Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
 
-	config ESP_LOCATION
-		string "Desired location"
-		default "tokyo"
-		help
-			Set your desired location like newyork, london, california
-
 endmenu
