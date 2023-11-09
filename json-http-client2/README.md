@@ -1,6 +1,6 @@
 # JSON Example
 
-DeSerialize JOSN message received by HTTP.   
+DeSerialize JOSN message received by HTTPS.   
 This project gets JSON data from https://www.howsmyssl.com/a/check   
 
 # Installation
