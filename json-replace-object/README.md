@@ -18,3 +18,14 @@ I (369) JSON: new_json_string
         "cores":        1
 }
 ```
+
+
+## API
+There are cJSON_ReplaceItemInObject() and cJSON_ReplaceItemInObjectCaseSensitive().
+```
+cJSON_ReplaceItemInObject(root, "cores", newitem);
+cJSON_ReplaceItemInObject(root, "CORES", newitem);
+cJSON_ReplaceItemInObjectCaseSensitive(root, "cores", newitem);
+cJSON_ReplaceItemInObjectCaseSensitive(root, "CORES", newitem);
+```
+
