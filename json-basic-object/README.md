@@ -17,3 +17,11 @@ I (345) JSON: cores=2
 I (345) JSON: flag_true=1
 I (345) JSON: flag_false=0
 ```
+
+## API
+There are cJSON_GetObjectItem() and cJSON_GetObjectItemCaseSensitive().
+```
+cJSON_GetObjectItem(root2, "version");
+cJSON_GetObjectItem(root2, "VERSION");
+cJSON_GetObjectItemCaseSensitive(root2, "VERSION");
+```
