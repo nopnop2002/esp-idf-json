@@ -23,5 +23,6 @@ There are cJSON_GetObjectItem() and cJSON_GetObjectItemCaseSensitive().
 ```
 cJSON_GetObjectItem(root2, "version");
 cJSON_GetObjectItem(root2, "VERSION");
+cJSON_GetObjectItemCaseSensitive(root2, "version");
 cJSON_GetObjectItemCaseSensitive(root2, "VERSION");
 ```
