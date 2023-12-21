@@ -29,3 +29,11 @@ cJSON_ReplaceItemInObjectCaseSensitive(root, "cores", newitem);
 cJSON_ReplaceItemInObjectCaseSensitive(root, "CORES", newitem);
 ```
 
+
+There are cJSON_DeleteItemFromObject() and cJSON_DeleteItemFromObjectCaseSensitive().
+```
+cJSON_DeleteItemFromObject(root, "version");
+cJSON_DeleteItemFromObject(root, "VERSION");
+cJSON_DeleteItemFromObjectCaseSensitive(root, "version");
+cJSON_DeleteItemFromObjectCaseSensitive(root, "VERSION");
+```
