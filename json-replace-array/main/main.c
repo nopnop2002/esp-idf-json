@@ -40,8 +40,20 @@ void app_main()
 	cJSON_ReplaceItemInArray(root, 0, newitem);
 	newitem = cJSON_CreateNumber(456);
 	cJSON_ReplaceItemInArray(root, 1, newitem);
-    char *new_json_string = cJSON_Print(root);
-    ESP_LOGI(TAG, "new_json_string\n%s",new_json_string);
+	char *new_json_string = cJSON_Print(root);
+	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string);
+
+	newitem = cJSON_CreateString("XYZ");
+	cJSON_InsertItemInArray(root, 0, newitem);
+	newitem = cJSON_CreateNumber(789);
+	cJSON_InsertItemInArray(root, 2, newitem);
+	char *new_json_string2 = cJSON_Print(root);
+	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string2);
+
+	cJSON_DeleteItemFromArray(root, 1);
+	cJSON_DeleteItemFromArray(root, 2);
+	char *new_json_string3 = cJSON_Print(root);
+	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string3);
 
 	cJSON_Delete(root);
 }
