@@ -27,5 +27,9 @@ void app_main()
 	char *new_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string);
 
+	cJSON_DeleteItemFromObject(root, "version");
+	char *new_json_string2 = cJSON_Print(root);
+	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string2);
+
 	cJSON_Delete(root);
 }

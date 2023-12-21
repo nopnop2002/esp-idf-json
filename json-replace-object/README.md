@@ -2,16 +2,19 @@
 
 ## Serialize
 ```
-I (334) JSON: Serialize.....
-I (334) JSON: origial_json_string
+I (349) JSON: Serialize.....
+I (349) JSON: origial_json_string
 {
-        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+        "version":      "v5.1.2-dirty",
         "cores":        2
 }
-I (344) JSON: new_json_string
+I (359) JSON: new_json_string
 {
         "version":      "abc",
         "cores":        1
 }
+I (369) JSON: new_json_string
+{
+        "cores":        1
+}
 ```
-
