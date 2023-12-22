@@ -138,6 +138,4 @@ element is added by cJSON_AddItemToObject.
         }]
 ```
 
-# API
-API is [here](https://cjson.docsforge.com/master/api/)
 
