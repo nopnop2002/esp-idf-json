@@ -4,7 +4,7 @@ DeSerialize JOSN message received by HTTP.
 This project gets JSON data from Fake REST Server.   
 
 
-# Install JSON (Fake REST) Server stable version on your host
+# Install json-server (Fake REST Server) stable version on your host
 ```
 sudo apt install npm
 sudo npm install -g json-server@0.17.4
