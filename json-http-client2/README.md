@@ -19,7 +19,6 @@ idf.py flash monitor
 ![config-app-http-client2](https://github.com/nopnop2002/esp-idf-json/assets/6020549/b5498612-afc9-4350-ba52-eb6d272cdac5)
 
 # Console output   
-This is the weather forecast for Tokyo.
 ```
 I (12837) JSON: Deserialize.....
 I (12847) JSON: [given_cipher_suites]
