@@ -1,0 +1,6 @@
+## IDF Component Manager Manifest File
+dependencies:
+  espressif/expat:
+    version: "^2.4.3"
+    rules:
+      - if: "idf_version >=5.0"
