@@ -30,15 +30,15 @@ void app_main()
 
 	esp_chip_info_t chip_info;
 	esp_chip_info(&chip_info);
-	cJSON *object;
 	int array_num = 5;
+	cJSON *object[array_num];
 	for (int i=0;i<array_num;i++) {
-		object = cJSON_CreateObject();
-		cJSON_AddNumberToObject(object, "id", i);
-		cJSON_AddStringToObject(object, "version", IDF_VER);
-		cJSON_AddNumberToObject(object, "cores", chip_info.cores);
-		cJSON_AddTrueToObject(object, "flag");
-		cJSON_AddItemToArray(root, object);
+		object[i] = cJSON_CreateObject();
+		cJSON_AddNumberToObject(object[i], "id", i);
+		cJSON_AddStringToObject(object[i], "version", IDF_VER);
+		cJSON_AddNumberToObject(object[i], "cores", chip_info.cores);
+		cJSON_AddTrueToObject(object[i], "flag");
+		cJSON_AddItemToArray(root, object[i]);
 	}
 
 	//const char *my_json_string = cJSON_Print(root);
