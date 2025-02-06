@@ -129,17 +129,17 @@ void app_main()
 	// Create array
 	cJSON *array;
 	array = cJSON_AddArrayToObject(root, "screen");
-	cJSON *array_element;
-	array_element = cJSON_CreateString("rect");
-	cJSON_AddItemToArray(array, array_element);
-	array_element = cJSON_CreateNumber(1920);
-	cJSON_AddItemToArray(array, array_element);
-	array_element = cJSON_CreateNumber(1080);
-	cJSON_AddItemToArray(array, array_element);
-	array_element = cJSON_CreateFalse();
-	cJSON_AddItemToArray(array, array_element);
-	array_element = cJSON_CreateTrue();
-	cJSON_AddItemToArray(array, array_element);
+	cJSON *array_element[5];
+	array_element[0] = cJSON_CreateString("rect");
+	cJSON_AddItemToArray(array, array_element[0]);
+	array_element[1] = cJSON_CreateNumber(1920);
+	cJSON_AddItemToArray(array, array_element[1]);
+	array_element[2] = cJSON_CreateNumber(1080);
+	cJSON_AddItemToArray(array, array_element[2]);
+	array_element[3] = cJSON_CreateFalse();
+	cJSON_AddItemToArray(array, array_element[3]);
+	array_element[4] = cJSON_CreateTrue();
+	cJSON_AddItemToArray(array, array_element[4]);
 
 	//const char *my_json_string = cJSON_Print(root);
 	char *my_json_string = cJSON_Print(root);
