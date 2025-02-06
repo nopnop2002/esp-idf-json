@@ -26,7 +26,7 @@ char *JSON_Types(int type) {
 	return NULL;
 }
 
-void app_main()
+void json_task(void *pvParameters)
 {
 	const unsigned int resolution_numbers[3][2] = {
 		{1280, 720},
@@ -41,35 +41,38 @@ void app_main()
 	cJSON *resolutions;
 	resolutions = cJSON_CreateArray();
 	cJSON_AddItemToObject(root, "resolutions", resolutions);
-	for(int index=0;index<(sizeof(resolution_numbers) / (2 * sizeof(int)));index++) {
-		cJSON *resolution = cJSON_CreateObject();
-		cJSON_AddItemToArray(resolutions, resolution);
-		cJSON *width = NULL;
-		width = cJSON_CreateNumber(resolution_numbers[index][0]);
-		cJSON_AddItemToObject(resolution, "width", width);
-		cJSON *height = NULL;
-		height = cJSON_CreateNumber(resolution_numbers[index][1]);
-		cJSON_AddItemToObject(resolution, "height", height);
+
+	int array_size = sizeof(resolution_numbers) / (2 * sizeof(int));
+	ESP_LOGI(TAG, "array_size=%d", array_size);
+	cJSON *object[array_size];
+	cJSON *width[array_size];
+	cJSON *height[array_size];
+	for(int i=0;i<array_size;i++) {
+		object[i] = cJSON_CreateObject();
+		cJSON_AddItemToArray(resolutions, object[i]);
+		width[i] = cJSON_CreateNumber(resolution_numbers[i][0]);
+		cJSON_AddItemToObject(object[i], "width", width[i]);
+		height[i] = cJSON_CreateNumber(resolution_numbers[i][1]);
+		cJSON_AddItemToObject(object[i], "height", height[i]);
 	}
 
 	cJSON *resolutionsWidth;
 	resolutionsWidth = cJSON_CreateArray();
 	cJSON_AddItemToObject(root, "resolutionsWidth", resolutionsWidth);
-	for(int index=0;index<(sizeof(resolution_numbers) / (2 * sizeof(int)));index++) {
-		cJSON *width = NULL;
-		width = cJSON_CreateNumber(resolution_numbers[index][0]);
-		cJSON_AddItemToArray(resolutionsWidth, width);
+	cJSON *width2[array_size];
+	for(int i=0;i<array_size;i++) {
+		width2[i] = cJSON_CreateNumber(resolution_numbers[i][0]);
+		cJSON_AddItemToArray(resolutionsWidth, width2[i]);
 	}
 
 	cJSON *resolutionsHeight;
 	resolutionsHeight = cJSON_CreateArray();
 	cJSON_AddItemToObject(root, "resolutionsHeight", resolutionsHeight);
-	for(int index=0;index<(sizeof(resolution_numbers) / (2 * sizeof(int)));index++) {
-		cJSON *height = NULL;
-		height = cJSON_CreateNumber(resolution_numbers[index][1]);
-		cJSON_AddItemToArray(resolutionsHeight, height);
+	cJSON *height2[array_size];
+	for(int i=0;i<array_size;i++) {
+		height2[i] = cJSON_CreateNumber(resolution_numbers[i][1]);
+		cJSON_AddItemToArray(resolutionsHeight, height2[i]);
 	}
-	//const char *my_json_string = cJSON_Print(root);
 	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
 	cJSON_Delete(root);
@@ -118,4 +121,10 @@ void app_main()
 	// Buffers returned by cJSON_Print must be freed by the caller.
 	// Please use the proper API (cJSON_free) rather than directly calling stdlib free.
 	cJSON_free(my_json_string);
+	vTaskDelete(NULL);
+}
+
+void app_main()
+{
+	xTaskCreate(json_task, "JSON", 1024*2, NULL, 2, NULL);
 }
