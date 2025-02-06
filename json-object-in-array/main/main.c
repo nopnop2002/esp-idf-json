@@ -35,27 +35,27 @@ void app_main()
 	cJSON *root;
 	root = cJSON_CreateArray();
 
-	cJSON *element;
-
 	// Add simple element
-	element = cJSON_CreateString("abc");
-	cJSON_AddItemToArray(root, element);
-	element = cJSON_CreateNumber(123);
-	cJSON_AddItemToArray(root, element);
-	element = cJSON_CreateTrue();
-	cJSON_AddItemToArray(root, element);
-	element = cJSON_CreateFalse();
-	cJSON_AddItemToArray(root, element);
-	element = cJSON_CreateNull();
-	cJSON_AddItemToArray(root, element);
+	cJSON *element[5];
+	element[0] = cJSON_CreateString("abc");
+	cJSON_AddItemToArray(root, element[0]);
+	element[1] = cJSON_CreateNumber(123);
+	cJSON_AddItemToArray(root, element[1]);
+	element[2] = cJSON_CreateTrue();
+	cJSON_AddItemToArray(root, element[2]);
+	element[3] = cJSON_CreateFalse();
+	cJSON_AddItemToArray(root, element[3]);
+	element[4] = cJSON_CreateNull();
+	cJSON_AddItemToArray(root, element[4]);
 
 	// Add object element
-	element = cJSON_CreateObject();
+	cJSON *object;
+	object = cJSON_CreateObject();
 	esp_chip_info_t chip_info;
 	esp_chip_info(&chip_info);
-	cJSON_AddStringToObject(element, "version", IDF_VER);
-	cJSON_AddNumberToObject(element, "cores", chip_info.cores);
-	cJSON_AddItemToArray(root, element);
+	cJSON_AddStringToObject(object, "version", IDF_VER);
+	cJSON_AddNumberToObject(object, "cores", chip_info.cores);
+	cJSON_AddItemToArray(root, object);
 
 	char *my_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "my_json_string\n%s",my_json_string);
