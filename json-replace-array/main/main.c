@@ -27,26 +27,26 @@ void app_main()
 	ESP_LOGI(TAG, "Serialize.....");
 	cJSON *root;
 	root = cJSON_CreateArray();
-	cJSON *element;
-	element = cJSON_CreateString("abc");
-	cJSON_AddItemToArray(root, element);
-	element = cJSON_CreateNumber(123);
-	cJSON_AddItemToArray(root, element);
+	cJSON *element[2];
+	element[0] = cJSON_CreateString("abc");
+	cJSON_AddItemToArray(root, element[0]);
+	element[1] = cJSON_CreateNumber(123);
+	cJSON_AddItemToArray(root, element[1]);
 	char *origial_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "origial_json_string\n%s",origial_json_string);
 
-	cJSON *newitem;
-	newitem = cJSON_CreateString("ABC");
-	cJSON_ReplaceItemInArray(root, 0, newitem);
-	newitem = cJSON_CreateNumber(456);
-	cJSON_ReplaceItemInArray(root, 1, newitem);
+	cJSON *newitem[4];
+	newitem[0] = cJSON_CreateString("ABC");
+	cJSON_ReplaceItemInArray(root, 0, newitem[0]);
+	newitem[1] = cJSON_CreateNumber(456);
+	cJSON_ReplaceItemInArray(root, 1, newitem[1]);
 	char *new_json_string = cJSON_Print(root);
 	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string);
 
-	newitem = cJSON_CreateString("XYZ");
-	cJSON_InsertItemInArray(root, 0, newitem);
-	newitem = cJSON_CreateNumber(789);
-	cJSON_InsertItemInArray(root, 2, newitem);
+	newitem[2] = cJSON_CreateString("XYZ");
+	cJSON_InsertItemInArray(root, 0, newitem[2]);
+	newitem[3] = cJSON_CreateNumber(789);
+	cJSON_InsertItemInArray(root, 2, newitem[3]);
 	char *new_json_string2 = cJSON_Print(root);
 	ESP_LOGI(TAG, "new_json_string\n%s",new_json_string2);
 
