@@ -11,31 +11,12 @@ sudo npm install -g json-server@0.17.4
 
 ```
 
-# Create db.json on your host
-```
-{
-  "todos": [
-    {
-      "id": 1,
-      "title": "Hello World!",
-      "time":1351824120,
-      "data":[1.00, 2.00, 3.00]
-    },
-    {
-      "id": 2,
-      "title": "Hello Japan!",
-      "time":1351824240,
-      "data":[1.11, 2.22]
-    }
-  ]
-}
-```
-
 # Start json-server (Fake REST Server)
 If the host parameter is not specified, it can only be accessed from local host.   
 When accessing from ESP32, host parameter is required.   
 ```
-json-server --watch --host {My_IP_Address} db.json
+cd esp-idf-json/json-http-client1
+json-server --watch --host {My_IP_Address} ./db.json
 ```
 
 ![JSON_Server](https://user-images.githubusercontent.com/6020549/71557207-3320e700-2a86-11ea-9761-823007c4b370.jpg)
@@ -121,4 +102,26 @@ I (6517) JSON: [data]
 I (6517) JSON: int=1 double=1.110000
 I (6517) JSON: int=2 double=2.220000
 
+```
+
+# Modify JSON data
+Edit db.json file.
+```
+$ cat db.json
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "Hello World!",
+      "time":1351824120,
+      "data":[1.00, 2.00, 3.00]
+    },
+    {
+      "id": 2,
+      "title": "Hello Japan!",
+      "time":1351824240,
+      "data":[1.11, 2.22]
+    }
+  ]
+}
 ```
