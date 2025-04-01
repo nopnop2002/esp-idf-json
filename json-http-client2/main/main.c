@@ -2,18 +2,17 @@
  *
  * This sample code is in the public domain.
  */
+
+#include <stdio.h>
+#include <inttypes.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-#include "freertos/event_groups.h"
 #include "freertos/ringbuf.h"
 #include "esp_system.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
-
-#include "lwip/err.h"
-#include "lwip/sys.h"
 
 #include "esp_http_client.h" 
 #include "esp_tls.h" 
@@ -32,35 +31,23 @@ static const char *TAG = "JSON";
 
 static int s_retry_num = 0;
 
-/* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "www.howsmyssl.com"
-#define WEB_PORT "443"
-#define WEB_URL "https://www.howsmyssl.com/a/check"
-
-static const char HOWSMYSSL_REQUEST[] = "GET " WEB_URL " HTTP/1.1\r\n"
-	"Host: "WEB_SERVER"\r\n"
-	"User-Agent: esp-idf/1.0 esp32\r\n"
-	"\r\n";
-
 /*
 	Root cert for metaweather.com, taken from metaweather_com_root_cert.pem
 
 	The PEM file was extracted from the output of this command:
-	openssl s_client -showcerts -connect jsonplaceholder.typicode.com.com:443 </dev/null
+	openssl s_client -showcerts -connect www.howsmyssl.com:443 </dev/null
 
 	The CA root cert is the last cert given in the chain of certs.
 
 	To embed it in the app binary, the PEM file is named
 	in the component.mk COMPONENT_EMBED_TXTFILES variable.
 */
-extern const uint8_t server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
-extern const uint8_t server_root_cert_pem_end[]   asm("_binary_server_root_cert_pem_end");
-
+extern char server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
+extern char server_root_cert_pem_end[]	 asm("_binary_server_root_cert_pem_end");
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 {
-	static char *output_buffer;  // Buffer to store response of http request from event handler
-	static int output_len;		 // Stores number of bytes read
+	static int output_len; // Stores number of bytes read
 	switch(evt->event_id) {
 		case HTTP_EVENT_ERROR:
 			ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
@@ -81,27 +68,11 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 			// If user_data buffer is configured, copy the response into the buffer
 			if (evt->user_data) {
 				memcpy(evt->user_data + output_len, evt->data, evt->data_len);
-			} else {
-				if (output_buffer == NULL && esp_http_client_get_content_length(evt->client) > 0) {
-					output_buffer = (char *) malloc(esp_http_client_get_content_length(evt->client));
-					output_len = 0;
-					if (output_buffer == NULL) {
-						ESP_LOGE(TAG, "Failed to allocate memory for output buffer");
-						return ESP_FAIL;
-					}
-				}
-				memcpy(output_buffer + output_len, evt->data, evt->data_len);
 			}
 			output_len += evt->data_len;
 			break;
 		case HTTP_EVENT_ON_FINISH:
 			ESP_LOGD(TAG, "HTTP_EVENT_ON_FINISH");
-			if (output_buffer != NULL) {
-				// Response is accumulated in output_buffer. Uncomment the below line to print the accumulated response
-				// ESP_LOG_BUFFER_HEX(TAG, output_buffer, output_len);
-				free(output_buffer);
-				output_buffer = NULL;
-			}
 			output_len = 0;
 			break;
 		case HTTP_EVENT_DISCONNECTED:
@@ -109,10 +80,6 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 			int mbedtls_err = 0;
 			esp_err_t err = esp_tls_get_and_clear_last_error(evt->data, &mbedtls_err, NULL);
 			if (err != 0) {
-				if (output_buffer != NULL) {
-					free(output_buffer);
-					output_buffer = NULL;
-				}
 				output_len = 0;
 				ESP_LOGE(TAG, "Last esp error code: 0x%x", err);
 				ESP_LOGE(TAG, "Last mbedtls failure: 0x%x", mbedtls_err);
@@ -133,11 +100,11 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 		esp_wifi_connect();
 	} else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
 		if (s_retry_num < CONFIG_ESP_MAXIMUM_RETRY) {
-				esp_wifi_connect();
-				s_retry_num++;
-				ESP_LOGI(TAG, "retry to connect to the AP");
+			esp_wifi_connect();
+			s_retry_num++;
+			ESP_LOGI(TAG, "retry to connect to the AP");
 		} else {
-				xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
+			xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
 		}
 		ESP_LOGI(TAG,"connect to the AP fail");
 	} else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
@@ -148,12 +115,11 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 	}
 }
 
-void wifi_init_sta(void)
+esp_err_t wifi_init_sta(void)
 {
 	s_wifi_event_group = xEventGroupCreate();
 
 	ESP_ERROR_CHECK(esp_netif_init());
-
 	ESP_ERROR_CHECK(esp_event_loop_create_default());
 	esp_netif_create_default_wifi_sta();
 
@@ -188,14 +154,14 @@ void wifi_init_sta(void)
 			},
 		},
 	};
-	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA) );
-	ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config) );
-	ESP_ERROR_CHECK(esp_wifi_start() );
-
-	ESP_LOGI(TAG, "wifi_init_sta finished.");
+	ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
+	ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+	ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+	ESP_ERROR_CHECK(esp_wifi_start());
 
 	/* Waiting until either the connection is established (WIFI_CONNECTED_BIT) or connection failed for the maximum
 	 * number of re-tries (WIFI_FAIL_BIT). The bits are set by event_handler() (see above) */
+	esp_err_t ret_value = ESP_OK;
 	EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
 		WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
 		pdFALSE,
@@ -208,14 +174,17 @@ void wifi_init_sta(void)
 		ESP_LOGI(TAG, "connected to ap SSID:%s password:%s", CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
 	} else if (bits & WIFI_FAIL_BIT) {
 		ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s", CONFIG_ESP_WIFI_SSID, CONFIG_ESP_WIFI_PASSWORD);
+		ret_value = ESP_FAIL;
 	} else {
 		ESP_LOGE(TAG, "UNEXPECTED EVENT");
+		ret_value = ESP_FAIL;
 	}
 
 	/* The event will not be processed after unregister */
 	ESP_ERROR_CHECK(esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
 	ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
 	vEventGroupDelete(s_wifi_event_group);
+	return ret_value;
 }
 
 char *JSON_Types(int type) {
@@ -271,186 +240,109 @@ void JSON_Analyze(const cJSON * const root) {
 	}
 }
 
-static size_t https_get_request(int request, esp_tls_cfg_t cfg, const char *WEB_SERVER_URL, const char *REQUEST, char *content)
+
+size_t http_client_content_length(char * url, char * cert_pem)
 {
-	char buf[512];
-	int ret, len;
-	size_t content_length = 0;
-	int index = 0;
-	int header_flag = 0;
+	ESP_LOGI(TAG, "http_client_content_length url=%s",url);
+	size_t content_length;
 
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
-	esp_tls_t *tls = esp_tls_init();
-	if (!tls) {
-		ESP_LOGE(TAG, "Failed to allocate esp_tls handle!");
-		return 0;
-	}
-
-	if (esp_tls_conn_http_new_sync(WEB_SERVER_URL, &cfg, tls) == 1) {
-		ESP_LOGI(TAG, "Connection established...");
-	} else {
-		ESP_LOGE(TAG, "Connection failed...");
-		goto exit;
-	}
-#else
-	struct esp_tls *tls = esp_tls_conn_http_new(WEB_SERVER_URL, &cfg);
-
-	if (tls != NULL) {
-		ESP_LOGI(TAG, "Connection established...");
-	} else {
-		ESP_LOGE(TAG, "Connection failed...");
-		goto exit;
-	}
-#endif
-
-	size_t written_bytes = 0;
-	do {
-		ret = esp_tls_conn_write(tls,
-								 REQUEST + written_bytes,
-								 strlen(REQUEST) - written_bytes);
-		if (ret >= 0) {
-			ESP_LOGI(TAG, "%d bytes written", ret);
-			written_bytes += ret;
-		} else if (ret != ESP_TLS_ERR_SSL_WANT_READ  && ret != ESP_TLS_ERR_SSL_WANT_WRITE) {
-			ESP_LOGE(TAG, "esp_tls_conn_write  returned: [0x%02X](%s)", ret, esp_err_to_name(ret));
-			goto exit;
-		}
-	} while (written_bytes < strlen(REQUEST));
-
-	ESP_LOGI(TAG, "Reading HTTP response...");
-
-	do {
-		len = sizeof(buf) - 1;
-		memset(buf, 0x00, sizeof(buf));
-		ret = esp_tls_conn_read(tls, buf, len);
-
-		if (ret == ESP_TLS_ERR_SSL_WANT_WRITE  || ret == ESP_TLS_ERR_SSL_WANT_READ) {
-			continue;
-		}
-
-		if (ret < 0) {
-			ESP_LOGE(TAG, "esp_tls_conn_read  returned [-0x%02X](%s)", -ret, esp_err_to_name(ret));
-			break;
-		}
-
-		if (ret == 0) {
-			ESP_LOGI(TAG, "connection closed");
-			break;
-		}
-
-		ESP_LOGI(TAG, "%d bytes read", ret);
-
-		char *addr;
-		if (request == 0) {
-			addr = strstr(buf, "Content-Length:");
-			ESP_LOGI(TAG, "addr=%p", addr);
-			if (addr != NULL) {
-				char wk[32];
-				memset(wk, 0x00, sizeof(wk));
-				for (int i=0;i<32;i++) {
-					ESP_LOGI(TAG, "addr[i+16]=0x%x", addr[i+16]);
-					wk[i] = addr[i+16];
-					if (addr[i+17] == 0x0d) break;
-				}
-				content_length = atoi(wk);
-				ESP_LOGI(TAG, "wk=[%s] content_length=%d", wk, content_length);
-				break;
-			} 
-		} else {
-			int start = 0;
-			if (header_flag == 0) {
-				int marker = 0;
-				for (int i = 0; i < ret; i++) {
-					ESP_LOGD(TAG, "buf[%d]=0x%x", i, buf[i]);
-					if (buf[i] == 0x0d) {
-						marker++;
-					} else if (buf[i] == 0x0a) {
-						marker++;
-						ESP_LOGD(TAG, "marker=%d", marker);
-						if (marker == 4) {
-							start = i+1;
-							header_flag = 1;
-							break;
-						}
-					} else {
-						marker = 0;
-					}
-				}
-			}
-			ESP_LOGI(TAG, "start=%d", start);
-			for (int i = start; i < ret; i++) {
-				content[index++] = buf[i];
-				content[index] = 0x00;
-			}
-			ESP_LOGI(TAG, "index=%d", index);
-		}
-
-		/* Print response directly to stdout as it is read */
-		for (int i = 0; i < ret; i++) {
-			putchar(buf[i]);
-		}
-		putchar('\n'); // JSON output doesn't have a newline at end
-	} while (1);
-
-exit:
-#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
-	esp_tls_conn_destroy(tls);
-#else
-	esp_tls_conn_delete(tls);
-#endif
-	return content_length;
-}
-
-
-size_t http_client_content_length()
-{
-	esp_tls_cfg_t cfg = {
-		.cacert_buf = (const unsigned char *) server_root_cert_pem_start,
-		.cacert_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
+	esp_http_client_config_t config = {
+		.url = url,
+		.event_handler = _http_event_handler,
+		.user_data = NULL,
+		//.user_data = local_response_buffer, // Pass address of local buffer to get response
+		.cert_pem = cert_pem,
 	};
-	size_t content_length = https_get_request(0, cfg, WEB_URL, HOWSMYSSL_REQUEST, NULL);
+	esp_http_client_handle_t client = esp_http_client_init(&config);
+
+	// GET
+	esp_err_t err = esp_http_client_perform(client);
+	if (err == ESP_OK) {
+		ESP_LOGD(TAG, "HTTP GET Status = %d, content_length = %"PRId64,
+			esp_http_client_get_status_code(client),
+			esp_http_client_get_content_length(client));
+		content_length = esp_http_client_get_content_length(client);
+
+	} else {
+		ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
+		content_length = 0;
+	}
+	esp_http_client_cleanup(client);
 	return content_length;
 }
 
-size_t http_client_content_body(char * buf)
+esp_err_t http_client_content_get(char * url, char * cert_pem, char * response_buffer)
 {
-	esp_tls_cfg_t cfg = {
-		.cacert_buf = (const unsigned char *) server_root_cert_pem_start,
-		.cacert_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
+	ESP_LOGI(TAG, "http_client_content_get url=%s",url);
+
+	esp_http_client_config_t config = {
+		.url = url,
+		.event_handler = _http_event_handler,
+		.user_data = response_buffer, // Pass address of local buffer to get response
+		.cert_pem = cert_pem,
 	};
-	size_t content_length = https_get_request(1, cfg, WEB_URL, HOWSMYSSL_REQUEST, buf);
-	return content_length;
+	esp_http_client_handle_t client = esp_http_client_init(&config);
+
+	// GET
+	esp_err_t err = esp_http_client_perform(client);
+	if (err == ESP_OK) {
+		ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %"PRId64,
+			esp_http_client_get_status_code(client),
+			esp_http_client_get_content_length(client));
+		ESP_LOGD(TAG, "\n%s", response_buffer);
+	} else {
+		ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
+	}
+	esp_http_client_cleanup(client);
+	return err;
 }
 
-void http_client()
+void http_client_get(char * url, char * cert_pem)
 {
 	// Get content length
 	size_t content_length;
-	content_length = http_client_content_length();
-	ESP_LOGI(TAG, "content_length=%d", content_length);
+	for (int retry=0;retry<10;retry++) {
+		content_length = http_client_content_length(url, cert_pem);
+		ESP_LOGI(pcTaskGetName(0), "content_length=%d", content_length);
+		if (content_length > 0) break;
+		vTaskDelay(100);
+	}
 
-	// Allocate buffer to store response of http request from event handler
-	char *buffer;
-	buffer = (char *) malloc(content_length+1);
-	if (buffer == NULL) {
-		ESP_LOGE(TAG, "Failed to allocate memory for output buffer");
+	if (content_length == 0) {
+		ESP_LOGE(pcTaskGetName(0), "[%s] server does not respond", url);
+		while(1) {
+			vTaskDelay(100);
+		}
+	}
+
+	char *response_buffer; // Buffer to store response of http request from event handler
+	response_buffer = (char *) malloc(content_length+1);
+	if (response_buffer == NULL) {
+		ESP_LOGE(pcTaskGetName(0), "Failed to allocate memory for output buffer");
 		while(1) {
 			vTaskDelay(1);
 		}
 	}
+	bzero(response_buffer, content_length+1);
 
-	// Get content body
-	http_client_content_body(buffer);
-	ESP_LOGI(TAG, "\n[%s]", buffer);
+	// Get content
+	while(1) {
+		esp_err_t err = http_client_content_get(url, cert_pem, response_buffer);
+		if (err == ESP_OK) break;
+		vTaskDelay(100);
+	}
+	ESP_LOGI(TAG, "content_length=%d", content_length);
+	ESP_LOGI(TAG, "\n[%s]", response_buffer);
 
-	// Deserialize JSON
 	ESP_LOGI(TAG, "Deserialize.....");
-	cJSON *root = cJSON_Parse(buffer);
+	cJSON *root = cJSON_Parse(response_buffer);
 	JSON_Analyze(root);
 	cJSON_Delete(root);
-	free(buffer);
+	free(response_buffer);
 }
 
+/* Constants that aren't configurable in menuconfig */
+#define WEB_URL "https://www.howsmyssl.com/a/check"
 
 void app_main()
 {
@@ -463,8 +355,8 @@ void app_main()
 	ESP_ERROR_CHECK(ret);
 
 	// Initialize WiFi
-	wifi_init_sta();
+	ESP_ERROR_CHECK(wifi_init_sta());
 
-	// http client request
-	http_client(); 
+	// http get request
+	http_client_get(WEB_URL, server_root_cert_pem_start); 
 }
