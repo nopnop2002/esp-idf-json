@@ -8,15 +8,11 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/event_groups.h"
-#include "freertos/ringbuf.h"
 #include "esp_system.h"
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
-
-#include "lwip/err.h"
-#include "lwip/sys.h"
 
 #include "esp_http_client.h" 
 #include "esp_tls.h" 
@@ -35,11 +31,9 @@ static const char *TAG = "JSON";
 
 static int s_retry_num = 0;
 
-RingbufHandle_t xRingbuffer;
-
-
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 {
+	static int output_len; // Stores number of bytes read
 	switch(evt->event_id) {
 		case HTTP_EVENT_ERROR:
 			ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
@@ -54,29 +48,28 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 			ESP_LOGD(TAG, "HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
 			break;
 		case HTTP_EVENT_ON_DATA:
-			ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, evt->data_len=%d", evt->data_len);
-			if (!esp_http_client_is_chunked_response(evt->client)) {
-				ESP_LOG_BUFFER_HEXDUMP(TAG, evt->data, evt->data_len, ESP_LOG_DEBUG);
-				//char buffer[512];
-				char *buffer = malloc(evt->data_len + 1);
-				//esp_http_client_read(evt->client, buffer, evt->data_len);
-				memcpy(buffer, evt->data, evt->data_len);
-				buffer[evt->data_len] = 0;
-				//ESP_LOGI(TAG, "buffer=%s", buffer);
-				//UBaseType_t res = xRingbufferSend(xRingbuffer, buffer, evt->data_len, pdMS_TO_TICKS(1000));
-				UBaseType_t res = xRingbufferSendFromISR(xRingbuffer, buffer, evt->data_len, NULL);
-				ESP_LOGD(TAG, "xRingbufferSendFromISR res=%d", res);
-				if (res != pdTRUE) {
-					ESP_LOGE(TAG, "Failed to xRingbufferSend");
-				}
-				free(buffer);
+			ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
+			//ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, content_length=%d", esp_http_client_get_content_length(evt->client));
+			ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, output_len=%d", output_len);
+			// If user_data buffer is configured, copy the response into the buffer
+			if (evt->user_data) {
+				memcpy(evt->user_data + output_len, evt->data, evt->data_len);
 			}
+			output_len += evt->data_len;
 			break;
 		case HTTP_EVENT_ON_FINISH:
 			ESP_LOGD(TAG, "HTTP_EVENT_ON_FINISH");
+			output_len = 0;
 			break;
 		case HTTP_EVENT_DISCONNECTED:
 			ESP_LOGD(TAG, "HTTP_EVENT_DISCONNECTED");
+			int mbedtls_err = 0;
+			esp_err_t err = esp_tls_get_and_clear_last_error(evt->data, &mbedtls_err, NULL);
+			if (err != 0) {
+				output_len = 0;
+				ESP_LOGE(TAG, "Last esp error code: 0x%x", err);
+				ESP_LOGE(TAG, "Last mbedtls failure: 0x%x", mbedtls_err);
+			}
 			break;
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
 		case HTTP_EVENT_REDIRECT:
@@ -86,7 +79,6 @@ esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 	}
 	return ESP_OK;
 }
-
 
 static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_id, void* event_data)
 {
@@ -233,13 +225,17 @@ void JSON_Parse(const cJSON * const root) {
 	}
 }
 
-void http_client(char * url)
+size_t http_client_content_length(char * url, char * cert_pem)
 {
+	ESP_LOGI(TAG, "http_client_content_length url=%s",url);
+	size_t content_length;
 	
 	esp_http_client_config_t config = {
-		//.url = "http://192.168.10.43:3000/todos",
 		.url = url,
 		.event_handler = _http_event_handler,
+		.user_data = NULL,
+		//.user_data = local_response_buffer, // Pass address of local buffer to get response
+		.cert_pem = cert_pem,
 	};
 	esp_http_client_handle_t client = esp_http_client_init(&config);
 
@@ -249,43 +245,85 @@ void http_client(char * url)
 		ESP_LOGD(TAG, "HTTP GET Status = %d, content_length = %"PRId64,
 			esp_http_client_get_status_code(client),
 			esp_http_client_get_content_length(client));
-		//Receive an item from no-split ring buffer
-		int bufferSize = esp_http_client_get_content_length(client);
-		char *buffer = malloc(bufferSize + 1); 
-		size_t item_size;
-		int index = 0;
-		while (1) {
-			char *item = (char *)xRingbufferReceive(xRingbuffer, &item_size, pdMS_TO_TICKS(1000));
-			if (item != NULL) {
-				for (int i = 0; i < item_size; i++) {
-					//printf("%c", item[i]);
-					buffer[index] = item[i];
-					index++;
-					buffer[index] = 0;
-				}
-				//printf("\n");
-				//Return Item
-				vRingbufferReturnItem(xRingbuffer, (void *)item);
-			} else {
-				//Failed to receive item
-				ESP_LOGI(TAG, "End of receive item");
-				break;
-			}
-		}
-		ESP_LOGI(TAG, "buffer...\n%s", buffer);
+		content_length = esp_http_client_get_content_length(client);
 
-		ESP_LOGI(TAG, "Deserialize.....");
-		cJSON *root = cJSON_Parse(buffer);
-		JSON_Parse(root);
-		cJSON_Delete(root);
-		free(buffer);
+	} else {
+		ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
+		content_length = 0;
+	}
+	esp_http_client_cleanup(client);
+	return content_length;
+}
 
+esp_err_t http_client_content_get(char * url, char * cert_pem, char * response_buffer)
+{
+	ESP_LOGI(TAG, "http_client_content_get url=%s",url);
+
+	esp_http_client_config_t config = {
+		.url = url,
+		.event_handler = _http_event_handler,
+		.user_data = response_buffer, // Pass address of local buffer to get response
+		.cert_pem = cert_pem,
+	};
+	esp_http_client_handle_t client = esp_http_client_init(&config);
+
+	// GET
+	esp_err_t err = esp_http_client_perform(client);
+	if (err == ESP_OK) {
+		ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %"PRId64,
+			esp_http_client_get_status_code(client),
+			esp_http_client_get_content_length(client));
+		ESP_LOGD(TAG, "\n%s", response_buffer);
 	} else {
 		ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
 	}
 	esp_http_client_cleanup(client);
+	return err;
 }
 
+void http_client_get(char * url, char * cert_pem)
+{
+	// Get content length
+	size_t content_length;
+	for (int retry=0;retry<10;retry++) {
+		content_length = http_client_content_length(url, cert_pem);
+		ESP_LOGI(pcTaskGetName(0), "content_length=%d", content_length);
+		if (content_length > 0) break;
+		vTaskDelay(100);
+	}
+
+	if (content_length == 0) {
+		ESP_LOGE(pcTaskGetName(0), "[%s] server does not respond", url);
+		while(1) {
+			vTaskDelay(100);
+		}
+	}
+
+	char *response_buffer; // Buffer to store response of http request from event handler
+	response_buffer = (char *) malloc(content_length+1);
+	if (response_buffer == NULL) {
+		ESP_LOGE(pcTaskGetName(0), "Failed to allocate memory for output buffer");
+		while(1) {
+			vTaskDelay(1);
+		}
+	}
+	bzero(response_buffer, content_length+1);
+
+	// Get content
+	while(1) {
+		esp_err_t err = http_client_content_get(url, cert_pem, response_buffer);
+		if (err == ESP_OK) break;
+		vTaskDelay(100);
+	}
+	ESP_LOGI(TAG, "content_length=%d", content_length);
+	ESP_LOGI(TAG, "\n[%s]", response_buffer);
+
+	ESP_LOGI(TAG, "Deserialize.....");
+	cJSON *root = cJSON_Parse(response_buffer);
+	JSON_Parse(root);
+	cJSON_Delete(root);
+	free(response_buffer);
+}
 
 void app_main()
 {
@@ -298,23 +336,17 @@ void app_main()
 	ESP_ERROR_CHECK(ret);
 
 	// Initialize WiFi
-	wifi_init_sta();
-
-	// Create No Split Ring Buffer 
-	xRingbuffer = xRingbufferCreate(1024, RINGBUF_TYPE_NOSPLIT);
-	// Create Allow_Split Ring Buffer
-	//xRingbuffer = xRingbufferCreate(1024, RINGBUF_TYPE_ALLOWSPLIT);
-	configASSERT( xRingbuffer );
+	ESP_ERROR_CHECK(wifi_init_sta());
 
 	// Array
 	char url[64];
 	sprintf(url, "%s", CONFIG_ESP_REST_URL);
 	ESP_LOGI(TAG, "url=%s",url);
 	//http_client("http://192.168.10.43:3000/todos"); 
-	http_client(url); 
+	http_client_get(url, NULL); 
 
 	// Object
 	sprintf(url, "%s/2", CONFIG_ESP_REST_URL);
 	ESP_LOGI(TAG, "url=%s",url);
-	http_client(url); 
+	http_client_get(url, NULL); 
 }
