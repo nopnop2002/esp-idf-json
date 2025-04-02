@@ -89,3 +89,17 @@ I (13167) JSON: TLS 1.2
 I (13177) JSON: [rating]
 I (13177) JSON: Probably Okay
 ```
+
+# Using a public JSON server   
+This project retrieves JSON data from ```www.howsmyssl.com```.   
+If you get the JSON data from a other public JSON server, you need to extract the root certificate.   
+You can use ```getpem.sh``` script to extract the server's root certificate.   
+```
+edit getpem.sh
+
+HOST="your public server"
+
+chmod 777 getpem.sh
+
+./getpem.sh
+```
