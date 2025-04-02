@@ -34,9 +34,9 @@ idf.py flash monitor
 ![Image](https://github.com/user-attachments/assets/069b30d7-a27c-4a22-a2c6-29d6d37ff1d3)
 
 The IP address in the URL of REST Server is the IP address of the host where you installed json-server.   
+The IP address of the REST server needs to be changed according to your environment.   
 ![Image](https://github.com/user-attachments/assets/743c0249-a3d2-4fb5-84a1-6506db84c0af)
 
-The IP address of the REST server needs to be changed according to your environment.   
 
 # How to use
 Open a browser and enter the IP address of the esp32 in the browser's address bar.   
