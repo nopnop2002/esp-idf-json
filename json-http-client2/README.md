@@ -91,7 +91,7 @@ I (13177) JSON: Probably Okay
 ```
 
 # Using a public JSON server   
-This project retrieves JSON data from ```www.howsmyssl.com```.   
+This project gets JSON data from [here](https://www.howsmyssl.com/a/check).   
 If you get the JSON data from a other public JSON server, you need to extract the root certificate.   
 You can use ```getpem.sh``` script to extract the server's root certificate.   
 ```
