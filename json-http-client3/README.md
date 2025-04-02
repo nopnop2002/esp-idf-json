@@ -40,6 +40,7 @@ The IP address of the REST server needs to be changed according to your environm
 
 # How to use
 Open a browser and enter the IP address of the esp32 in the browser's address bar.   
+The ESP32 retrieves data from the Fake REST Server and displays it in tree format.   
 ![Image](https://github.com/user-attachments/assets/562a3c75-8297-413b-8b07-58749c950af2)
 
 Instead of IP addresses, you can use mDNS hostnames.
