@@ -34,9 +34,9 @@ idf.py flash monitor
 ![config-top-http-client1](https://user-images.githubusercontent.com/6020549/167752001-36383f6a-17cd-44e1-9550-49883fc1d408.jpg)
 
 The IP address in the URL of REST Server is the IP address of the host where you installed json-server.   
+The IP address of the REST server needs to be changed according to your environment.   
 ![config-app-http-client1](https://user-images.githubusercontent.com/6020549/167751997-071eec15-36c6-4159-bcd1-850a605277fb.jpg)
 
-The IP address of the REST server needs to be changed according to your environment.   
 
 # Console output
 ```
