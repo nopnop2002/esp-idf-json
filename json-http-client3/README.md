@@ -3,7 +3,7 @@ Demonstration of displaying a JSON message in tree format.
 Nested JSON messages lend themselves to a Tree representation.   
 I used [this](https://github.com/summerstyle/jsonTreeViewer) library.   
 This project gets JSON data from Fake REST Server.   
-![Image](https://github.com/user-attachments/assets/a23bdbe5-1e35-4706
+![Image](https://github.com/user-attachments/assets/a23bdbe5-1e35-4706-892a-4bb9c2e8df5d)
 
 # Install json-server (Fake REST Server) stable version on your host
 ```
