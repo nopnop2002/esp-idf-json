@@ -1,0 +1,34 @@
+menu "Application configuration"
+
+	config ESP_WIFI_SSID
+		string "WiFi SSID"
+		default "myssid"
+		help
+			SSID (network name) to connect to.
+
+	config ESP_WIFI_PASSWORD
+		string "WiFi Password"
+		default "mypassword"
+		help
+			WiFi password (WPA or WPA2) to connect to.
+
+	config ESP_MAXIMUM_RETRY
+		int "Maximum retry"
+		default 5
+		help
+			Set the Maximum retry to avoid station reconnecting to the AP unlimited when the AP is really inexistent.
+
+	config MDNS_HOSTNAME
+		string "mDNS Hostname"
+		default "esp32-server"
+		help
+			The mDNS host name used by the ESP32.
+
+	config ESP_REST_URL
+		string "URL of REST Server"
+		default "http://192.168.10.43:3000/tree"
+		help
+			URL of REST Server.
+
+endmenu
+

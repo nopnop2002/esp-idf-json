@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link href="libs/app/reset.css" rel="stylesheet" />
+	<link href="libs/app/app.css" rel="stylesheet" />
+	<link href="libs/jsonTree/jsonTree.css" rel="stylesheet" />
+	<!-- add extra fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
+	<!--
+		JSON Tree Viewer
+		http://github.com/summerstyle/jsonTreeViewer
+
+		Copyright 2017 Vera Lobacheva (http://iamvera.com)
+		Released under the MIT license (LICENSE.txt)
+	-->
+	<title>Json Tree View</title>
+</head>
+
+<body class="jsontree_bg">
+	<!-- Buttons -->
+	<header id="header">
+		<h1 id="logo">
+			<a href="http://github.com/summerstyle/jsonTreeViewer">
+				jsonTreeViewer
+			</a>
+		</h1>
+		<nav id="nav" class="clearfix">
+			<div class="menu__item">
+				<span class="menu__item-name">
+					<a href="#" onclick="expand_all()">expand all</a>
+				</span>
+			</div>
+			<div class="menu__item">
+				<span class="menu__item-name">
+					<a href="#" onclick="collapse_all()">collapse all</a>
+				</span>
+			</div>
+		</nav>
+
+		<!--
+		<nav id="nav" class="clearfix">
+			<ul class="menu menu_level1">
+				<li data-action="expand" class="menu__item">
+					<span class="menu__item-name">expand all</span>
+				</li>
+				<li data-action="collapse" class="menu__item">
+					<span class="menu__item-name">collapse all</span>
+				</li>
+				<li data-action="source" class="menu__item">
+					<span class="menu__item-name">show source</span>
+				</li>
+				<li data-action="help" class="menu__item">
+					<span class="menu__item-name">?</span>
+				</li>
+			</ul>
+		</nav>
+		<div id="coords"></div>
+		<div id="debug"></div>
+		-->
+
+	</header>
+
+	<!-- json tree -->
+	<div id="wrapper">
+		<div id="tree"></div>
+	</div>
+
+	<div id="wrapper">
+		<div id="elasped"></div>
+	</div>
+
+	<script src="libs/jsonTree/jsonTree.js"></script>
+	<!--
+	<script src="jsonTreeViewer.js"></script>
+	-->
+
+	<script type="text/javascript" src="main.js"></script>
+
+</body>
+</html>
+

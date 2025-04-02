@@ -1,0 +1,12 @@
+idf_component_register(SRCS "main.c" "web_server.c" "web_client.c" "http_get_notify.c"
+    INCLUDE_DIRS "."
+    EMBED_FILES "../html/error.html"
+                "../html/favicon.ico"
+                "../html/main.js"
+                "../html/root.html"
+                "../html/main.css"
+                "../html/libs/app/reset.css"
+                "../html/libs/app/app.css"
+                "../html/libs/jsonTree/jsonTree.css"
+                "../html/libs/jsonTree/jsonTree.js"
+                "../html/libs/jsonTree/icons.svg")

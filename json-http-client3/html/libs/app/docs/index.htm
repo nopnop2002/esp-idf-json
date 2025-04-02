@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>App.js framework</title>
+	<link href="main.css" rel="stylesheet" />
+	<link href="../app.css" rel="stylesheet" />
+	<script src="../App.js"></script>
+	<meta charset="UTF-8" />
+</head>
+<body>
+<noscript>
+	<div id="noscript">
+		Please, enable javascript in your browser
+	</div>
+</noscript>
+  
+<div id="container">
+	<div class="txt">
+		<header>
+			<h1>
+				<a href="http://github.com/summerstyle/app.js">App.js</a> &mdash; a simple javascript-framework
+				for building desktop-like applications.
+			</h1>
+			<p>
+				The framework includes this parts:
+			</p>
+			<nav>
+				<ul class="links">
+					<li>
+						<a href="#app_window">Window</a>
+					</li>
+					<li>
+						<a href="#app_menu">Menu</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+		<h2>
+			The components
+		</h2>
+		<ul>
+			<li id="app_window">
+				<h3>The constructor <span class="code code_inline">App.Window</span></h3>
+				<p>
+					Move a block content to window and apply javascript-module for it.
+				</p>
+				<div class="code">
+					<div class="line">
+						var code = new App.Window({
+					</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;content_el : utils.dom.id('code'),</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;overlay : true,</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;js_module : function(self) {</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return {
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print: function() {
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.el.innerHTML = selected_keys.generate_config();
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.show();
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+					</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+					<div class="line">
+						});
+					</div>
+				</div>
+				<p>
+					<span class="pseudo_link" id="window_example_link">Open an example</span>
+					<div id="window_example">
+						This is window with content	
+					</div>
+					<script>
+						window.addEventListener('load', function(e) {
+							var link = document.getElementById('window_example_link');
+							
+							var win = new App.Window({
+								content_el : document.getElementById('window_example'),
+								overlay : true
+							});
+							
+							link.onclick = function() {
+								win.show();
+							}
+						}, false);
+					</script>
+				</p>
+				<h4>Parameters:</h4>
+				<ul>
+					<li>
+						content_el* &ndash; a dom-element for including in window,
+					</li>
+					<li>
+						overlay &ndash; a window with overlay,
+					</li>
+					<li>
+						closable &ndash; a window can be closed,
+					</li>
+					<li>
+						layout &ndash; a style of window,
+					</li>
+					<li>
+						js_module &ndash; a function returns an object with methods,
+						which are mixed in a standard window methods.    
+					</li>
+				</ul>
+				<h4>The window interface:</h4>
+				<ul>
+					<li>show() &mdash; show window,</li>
+					<li>hide() &mdash; hide window.</li>
+				</ul>
+			</li>
+			<li id="app_menu">
+				<h3>The constructor <span class="code code_inline">App.Menu</span></h3>
+				<p>This conctructor creates multilevel menu.</p>
+				<p>The menu constructor called with two arguments: dom-element with link lists
+				and an object with name-action mapping.</p>
+				
+				<h4>An example:</h4>
+				
+				<nav id="nav" class="clearfix" style="background: #F5F5F5; margin-bottom: 30px;">
+					<ul class="menu menu_level1" style="list-style: none; margin: 0; ">
+						<li data-action="item1" class="menu__item">
+							<span class="menu__item-name">Item 1</span>
+							<ul class="menu menu_level2" style="list-style: none; margin: 0; ">
+								<li data-action="item1_subitem1" class="menu__item">
+									<span class="menu__item-name">SubItem 1</span>
+								</li>
+								<li data-action="item1_subitem2" class="menu__item">
+									<span class="menu__item-name">SubItem 2</span>
+								</li>
+								<li data-action="item1_subitem3" class="menu__item">
+									<span class="menu__item-name">SubItem 3</span>
+								</li>
+							</ul>
+						</li>
+						<li data-action="item2" class="menu__item">
+							<span class="menu__item-name">Item 2</span>
+							<ul class="menu menu_level2" style="list-style: none; margin: 0; ">
+								<li data-action="item2_subitem1" class="menu__item">
+									<span class="menu__item-name">SubItem 1</span>
+								</li>
+								<li data-action="item2_subitem2" class="menu__item">
+									<span class="menu__item-name">SubItem 2</span>
+								</li>
+							</ul>
+						</li>
+						<li data-action="item3" class="menu__item">
+							<span class="menu__item-name">Item 3</span>
+						</li>
+					</ul>
+				</nav>
+				<script>
+					window.addEventListener('load', function() {
+						var win = new App.Menu(document.getElementById('nav'), {
+							'item1' : function() {
+								alert('Item 1');
+							},
+							'item2' : function() {
+								alert('Item 2');
+							},
+							'item3' : function() {
+								alert('Item 3');
+							},
+							'item1_subitem1' : function() {
+								alert('SubItem 1');
+							},
+							'item1_subitem2' : function() {
+								alert('SubItem 2');
+							},
+							'item1_subitem3' : function() {
+								alert('SubItem 3');
+							},
+							'item2_subitem1' : function() {
+								alert('SubItem 1');
+							},
+							'item2_subitem2' : function() {
+								alert('SubItem 2');
+							}
+						});
+					}, false);
+				</script>
+				
+				<h4>HTML-structure of a menu:</h4>
+				<div class="code">
+					<div class="line">
+						&lt;nav id=&quot;nav&quot; class=&quot;clearfix&quot;&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&lt;ul class=&quot;menu menu_level1&quot;&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li data-action=&quot;get_config&quot; class=&quot;menu__item&quot;&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class=&quot;menu__item-name&quot;&gt;get config&lt;/span&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/li&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li data-action=&quot;settings&quot; class=&quot;menu__item&quot;&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class=&quot;menu__item-name&quot;&gt;settings&lt;/span&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/li&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li data-action=&quot;clear&quot; class=&quot;menu__item&quot;&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class=&quot;menu__item-name&quot;&gt;clear&lt;/span&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/li&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li data-action=&quot;show_help&quot; class=&quot;menu__item&quot;&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class=&quot;menu__item-name&quot;&gt;?&lt;/span&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/li&gt;
+					</div>
+					<div class="line">
+						&nbsp;&nbsp;&nbsp;&nbsp;&lt;/ul&gt;
+					</div>
+					<div class="line">
+						&lt;/nav&gt;
+					</div>
+				</div>
+				
+				<h4>Javascript-code for it</h4>
+				<div class="code">
+					<div class="line">var menu = new App.Menu(utils.dom.id('nav'), {</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;'clear' : function() {</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Deselect all keys</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (confirm('Clear all?')) {</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;selected_keys.clear();</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code.hide();</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;},</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;'get_config' : function() {</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code.print();</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;},</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;'show_help' : function() {</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;help.show();</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;},</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;'settings' : function() {</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;settings_form.show();</div>
+					<div class="line">&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+					<div class="line">});</div>
+				</div>
+								
+			</li>
+		</ul>
+	</div>
+</div>
+	
+<script src="App.js"></script>
+</body>
+</html>
