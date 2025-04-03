@@ -107,7 +107,9 @@ I (6517) JSON: int=2 double=2.220000
 ```
 
 # Modify JSON data
-Edit db.json file.
+Modify the db.json file.   
+The changes will be reflected immediately.   
+There is no need to restart json-server (Fake REST Server).   
 ```
 $ cat db.json
 {
