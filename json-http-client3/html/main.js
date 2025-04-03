@@ -1,9 +1,6 @@
 //document.getElementById("datetime").innerHTML = "WebSocket is not connected";
 
 var websocket = new WebSocket('ws://'+location.hostname+'/');
-var meter1 = 0;
-var meter2 = 0;
-var meter3 = 0;
 
 // Initialize tree. Displays an empty tree.
 var treeWrapper = document.getElementById("tree");
