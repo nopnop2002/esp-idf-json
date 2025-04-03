@@ -41,7 +41,7 @@ Open a browser and enter the IP address of the esp32 in the browser's address ba
 The ESP32 retrieves data from the Fake REST Server and displays it in tree format.   
 ![Image](https://github.com/user-attachments/assets/7d1a49f3-8643-4420-85a6-1fcbf39119db)
 
-Instead of IP addresses, you can use mDNS hostnames.
+Instead of IP addresses, you can use mDNS hostnames.   
 ![Image](https://github.com/user-attachments/assets/c6033956-9cd8-4054-83ce-861aa3542779)
 
 # Modify JSON data
