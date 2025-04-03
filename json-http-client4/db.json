@@ -1,0 +1,16 @@
+{
+	"array": [
+		["id","type","name","batter"],
+		["0001","donut","Cake","Regulard"],
+		["0001","donut","Cake","Chocolate"],
+		["0001","donut","Cake","Blueberry"],
+		["0001","donut","Cake","Devil's Food"],
+		["0002","donut","Raised","Regular"],
+		["0003","donut","Old Fashioned","Regular"],
+		["0003","donut","Old Fashioned","Chocolate"],
+		["0004","bar","Bar","Regular"],
+		["0005","twist","Twist","Regular"],
+		["0006","filled","Filled","Regular"]
+	]
+	
+}

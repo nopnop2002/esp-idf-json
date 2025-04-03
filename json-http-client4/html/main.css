@@ -1,0 +1,18 @@
+/*
+Your favorite style is defined here.
+*/
+th,td {
+    border: solid 1px; /* Frame line specification */
+}
+
+table {
+    border-collapse:  collapse; /* Overlap cell lines */
+}
+
+th {
+    background-color: #00e2cf; /* Background color */
+}
+
+td {
+    background-color: #bde9ba; /* Background color */
+}
