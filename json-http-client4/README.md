@@ -45,7 +45,9 @@ Instead of IP addresses, you can use mDNS hostnames.
 ![Image](https://github.com/user-attachments/assets/c6033956-9cd8-4054-83ce-861aa3542779)
 
 # Modify JSON data
-Edit db.json file.
+Modify the db.json file.   
+The changes will be reflected immediately.   
+There is no need to restart json-server (Fake REST Server).   
 ```
 $ cat db.json
 {
