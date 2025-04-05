@@ -1,6 +1,7 @@
 # JSON Example
 Converts a node table into a nested JSON string.   
 This is a complex structure of objects and arrays.   
+You need to serialize from the lowest level up.   
 
 # Node table
 ```
