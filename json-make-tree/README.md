@@ -1,7 +1,7 @@
 # JSON Example
 Converts a node table into a nested JSON string.   
 
-# node table
+# Node table
 ```
 I (333) JSON: node[0] self=[0] parent=[]
 I (333) JSON: node[1] self=[101] parent=[0]
