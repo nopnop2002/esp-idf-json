@@ -17,7 +17,8 @@ void app_main()
 	root = cJSON_CreateObject();
 	esp_chip_info_t chip_info;
 	esp_chip_info(&chip_info);
-	cJSON_AddStringToObject(root, "version", IDF_VER);
+	cJSON_AddStringToObject(root, "idf", IDF_VER);
+	cJSON_AddStringToObject(root, "json", cJSON_Version());
 	cJSON_AddNumberToObject(root, "cores", chip_info.cores);
 	cJSON_AddTrueToObject(root, "flag_true");
 	cJSON_AddFalseToObject(root, "flag_false");
@@ -28,9 +29,13 @@ void app_main()
 
 	ESP_LOGI(TAG, "Deserialize.....");
 	cJSON *root2 = cJSON_Parse(my_json_string);
-	if (cJSON_GetObjectItem(root2, "version")) {
-		char *version = cJSON_GetObjectItem(root2,"version")->valuestring;
-		ESP_LOGI(TAG, "version=%s",version);
+	if (cJSON_GetObjectItem(root2, "idf")) {
+		char *idf = cJSON_GetObjectItem(root2,"idf")->valuestring;
+		ESP_LOGI(TAG, "idf=%s",idf);
+	}
+	if (cJSON_GetObjectItem(root2, "json")) {
+		char *json = cJSON_GetObjectItem(root2,"json")->valuestring;
+		ESP_LOGI(TAG, "json=%s",json);
 	}
 	if (cJSON_GetObjectItem(root2, "cores")) {
 		int cores = cJSON_GetObjectItem(root2,"cores")->valueint;
