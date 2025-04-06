@@ -164,19 +164,19 @@ No matter how complex the structure, there are only objects and arrays.
 	- Create 3 object   
 		This is simple object.
 		```
-		{
+		                {
 		                        "width":        1280,
 		                        "height":       720
 		                }
 		```
 		```
-		{
+		                {
 		                        "width":        1920,
 		                        "height":       1080
 		                }
 		```
 		```
-		{
+		                {
 		                        "width":        3840,
 		                        "height":       2160
 		                }
@@ -186,7 +186,7 @@ No matter how complex the structure, there are only objects and arrays.
 	- Create array   
 		This is object in array.
 		```
-		[{
+		               [{
 		                        "width":        1280,
 		                        "height":       720
 		                }, {
