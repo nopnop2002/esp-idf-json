@@ -155,7 +155,7 @@ Serialize from the bottom layer.
                 "cores":        2,
                 "array":        ["abc", 123, true, false, null]
         }]
-``
+```
 
 
 - Create 2 array
