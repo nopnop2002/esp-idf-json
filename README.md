@@ -197,7 +197,8 @@ Serialize from the bottom layer.
 		                }]
 		```
 
-	- Create object as root
+	- Create object as root   
+		This is array in object.
 		```
 		{
 		        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
@@ -261,7 +262,8 @@ Serialize from the bottom layer.
 		        }
 		```
 
-	- Create array as root
+	- Create array as root   
+		This is object in array.
 		```
 		[{
 		                "id":   0,
