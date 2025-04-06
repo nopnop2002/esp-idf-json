@@ -80,7 +80,7 @@ cJSON_free(my_json_string);
 
 
 
-	- Object in Object   
+- Object in Object   
 	```
 	{
 	        "name": "Jack (\"Bee\") Nimble",
