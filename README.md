@@ -158,12 +158,12 @@ Serialize from the bottom layer.
 ```
 
 
-- Create 2 array   
-This is simple array.
-```
-["abc", 123, true, false, null]
-["abc", 123, true, false, null]
-```
+	- Create 2 array   
+	This is simple array.
+	```
+	["abc", 123, true, false, null]
+	["abc", 123, true, false, null]
+	```
 
 - Create 1st object   
 This is array in object.
