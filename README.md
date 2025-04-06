@@ -182,7 +182,7 @@ Serialize from the bottom layer.
 
 		```
 
-	- Create array
+	- Create array   
 		This is object in array.
 		```
 		[{
