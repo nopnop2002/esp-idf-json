@@ -106,37 +106,37 @@ cJSON_free(my_json_string);
 # More Complex structure   
 
 - Object in Array in Object   
-```
-{
-        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-        "cores":        2,
-        "array":  [{
-                        "width":        1280,
-                        "height":       720
-                }, {
-                        "width":        1920,
-                        "height":       1080
-                }, {
-                        "width":        3840,
-                        "height":       2160
-                }]
-}
-```
+	```
+	{
+	        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	        "cores":        2,
+	        "array":  [{
+	                        "width":        1280,
+	                        "height":       720
+	                }, {
+	                        "width":        1920,
+	                        "height":       1080
+	                }, {
+	                        "width":        3840,
+	                        "height":       2160
+	                }]
+	}
+	```
 
 - Array in Object in Array   
-```
-[{
-                "id":   0,
-                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-                "cores":        2,
-                "array":        ["abc", 123, true, false, null]
-        }, {
-                "id":   1,
-                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-                "cores":        2,
-                "array":        ["abc", 123, true, false, null]
-        }]
-```
+	```
+	[{
+	                "id":   0,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }, {
+	                "id":   1,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }]
+	```
 
 # How to Serialize   
 Serialization starts from the lowest level.   
