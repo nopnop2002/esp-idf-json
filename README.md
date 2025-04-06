@@ -53,7 +53,7 @@ cJSON_free(my_json_string);
 
 # Complex structure   
 
-	- Object in Array   
+- Object in Array   
 	```
 	["abc", 123, true, false, null, {
 	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
