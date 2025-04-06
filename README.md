@@ -183,6 +183,7 @@ Serialize from the bottom layer.
 		```
 
 	- Create array
+		This is object in array.
 		```
 		[{
 		                        "width":        1280,
