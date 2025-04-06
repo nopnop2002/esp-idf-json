@@ -161,7 +161,7 @@ No matter how complex the structure, there are only objects and arrays.
 	```
 
 
-	- Create 3 object   
+	- Create 3 objects   
 		This is simple object.
 		```
 		                {
@@ -234,14 +234,16 @@ No matter how complex the structure, there are only objects and arrays.
 	```
 
 
-	- Create 2 array   
+	- Create 2 arrays   
 		This is simple array.
 		```
 		["abc", 123, true, false, null]
+		```
+		```
 		["abc", 123, true, false, null]
 		```
 
-	- Create 2 object   
+	- Create 2 objects   
 		This is array in object.
 		```
 		        {
