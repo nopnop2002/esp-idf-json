@@ -141,6 +141,76 @@ element is added by cJSON_AddItemToObject.
 # How to Serialize
 Serialize from the bottom layer.
 
+- Target strsucture
+```
+{
+        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+        "cores":        2,
+        "array":  [{
+                        "width":        1280,
+                        "height":       720
+                }, {
+                        "width":        1920,
+                        "height":       1080
+                }, {
+                        "width":        3840,
+                        "height":       2160
+                }]
+}
+```
+	- Create 3 object   
+		This simple object.   
+		```
+		{
+		                        "width":        1280,
+		                        "height":       720
+		                }
+		```
+		```
+		{
+		                        "width":        1920,
+		                        "height":       1080
+		                }
+		```
+		```
+		{
+		                        "width":        3840,
+		                        "height":       2160
+		                }
+
+		```
+
+	- Create arry   
+		```
+		[{
+		                        "width":        1280,
+		                        "height":       720
+		                }, {
+		                        "width":        1920,
+		                        "height":       1080
+		                }, {
+		                        "width":        3840,
+		                        "height":       2160
+		                }]
+		```
+
+	- Cretae object as root
+		```
+		{
+		        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+		        "cores":        2,
+		        "array":  [{
+		                        "width":        1280,
+		                        "height":       720
+		                }, {
+		                        "width":        1920,
+		                        "height":       1080
+		                }, {
+		                        "width":        3840,
+		                        "height":       2160
+		                }]
+		}
+		```
 
 - Target structure
 	```
