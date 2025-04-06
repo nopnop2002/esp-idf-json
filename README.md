@@ -158,49 +158,49 @@ Serialize from the bottom layer.
 ```
 
 
-- Create 2 array   
-This is simple array.
-```
-["abc", 123, true, false, null]
-["abc", 123, true, false, null]
-```
+	- Create 2 array   
+	This is simple array.
+	```
+	["abc", 123, true, false, null]
+	["abc", 123, true, false, null]
+	```
 
-- Create 1st object   
-This is array in object.
-```
-{
-                "id":   1,
-                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-                "cores":        2,
-                "array":        ["abc", 123, true, false, null]
-        }
-```
+	- Create 1st object   
+	This is array in object.
+	```
+	{
+	                "id":   1,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }
+	```
 
-- Create 2nd object   
-This is array in object.
-```
-{
-                "id":   0,
-                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-                "cores":        2,
-                "array":        ["abc", 123, true, false, null]
-        }
-```
+	- Create 2nd object   
+	This is array in object.
+	```
+	{
+	                "id":   0,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }
+	```
 
-- Create array as root
-```
-[{
-                "id":   0,
-                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-                "cores":        2,
-                "array":        ["abc", 123, true, false, null]
-        }, {
-                "id":   1,
-                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-                "cores":        2,
-                "array":        ["abc", 123, true, false, null]
-        }]
-```
+	- Create array as root
+	```
+	[{
+	                "id":   0,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }, {
+	                "id":   1,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }]
+	```
 
 
 
