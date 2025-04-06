@@ -158,6 +158,7 @@ Serialize from the bottom layer.
                 }]
 }
 ```
+
 	- Create 3 object   
 		This simple object.   
 		```
@@ -166,18 +167,19 @@ Serialize from the bottom layer.
 		                        "height":       720
 		                }
 		```
+
 		```
 		{
 		                        "width":        1920,
 		                        "height":       1080
 		                }
 		```
+
 		```
 		{
 		                        "width":        3840,
 		                        "height":       2160
 		                }
-
 		```
 
 - Create arry   
