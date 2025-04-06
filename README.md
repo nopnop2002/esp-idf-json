@@ -159,13 +159,20 @@ Serialize from the bottom layer.
 }
 ```
 
-	- Create 3 object   
+	- Create 2 array   
+		This is simple array.
 		```
-		{
-		                        "width":        1280,
-		                        "height":       720
-		                }
+		["abc", 123, true, false, null]
+		["abc", 123, true, false, null]
 		```
+
+- Create 3 object   
+```
+{
+                        "width":        1280,
+                        "height":       720
+                }
+```
 
 ```
 {
