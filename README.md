@@ -49,7 +49,7 @@ cJSON_free(my_json_string);
 	        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
 	        "cores":        2,
 	}
-```
+	```
 
 # Complex structure   
 
