@@ -158,13 +158,15 @@ Serialize from the bottom layer.
 ```
 
 
-- Create 2 array
+- Create 2 array   
+This is simple array.
 ```
 ["abc", 123, true, false, null]
 ["abc", 123, true, false, null]
 ```
 
-- Create 1st object
+- Create 1st object   
+This is array in object.
 ```
 {
                 "id":   1,
@@ -174,7 +176,8 @@ Serialize from the bottom layer.
         }
 ```
 
-- Create 2nd object
+- Create 2nd object   
+This is array in object.
 ```
 {
                 "id":   0,
