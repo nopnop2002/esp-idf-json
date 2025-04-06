@@ -241,7 +241,7 @@ No matter how complex the structure, there are only objects and arrays.
 		["abc", 123, true, false, null]
 		```
 
-	- Create 1st object   
+	- Create 2 object   
 		This is array in object.
 		```
 		        {
@@ -252,8 +252,6 @@ No matter how complex the structure, there are only objects and arrays.
 		        }
 		```
 
-	- Create 2nd object   
-		This is array in object.
 		```
 		        {
 		                "id":   0,
