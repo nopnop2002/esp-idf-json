@@ -141,23 +141,21 @@ element is added by cJSON_AddItemToObject.
 # How to Serialize
 Serialize from the bottom layer.
 
-- Target strsucture
-```
-{
-        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-        "cores":        2,
-        "array":  [{
-                        "width":        1280,
-                        "height":       720
-                }, {
-                        "width":        1920,
-                        "height":       1080
-                }, {
-                        "width":        3840,
-                        "height":       2160
-                }]
-}
-```
+- Target structure
+	```
+	[{
+	                "id":   0,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }, {
+	                "id":   1,
+	                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+	                "cores":        2,
+	                "array":        ["abc", 123, true, false, null]
+	        }]
+	```
+
 
 	- Create 2 array   
 		This is simple array.
@@ -166,59 +164,43 @@ Serialize from the bottom layer.
 		["abc", 123, true, false, null]
 		```
 
-- Create 3 object   
-```
-{
-                        "width":        1280,
-                        "height":       720
-                }
-```
+	- Create 1st object   
+		This is array in object.
+		```
+		{
+		                "id":   1,
+		                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+		                "cores":        2,
+		                "array":        ["abc", 123, true, false, null]
+		        }
+		```
 
-```
-{
-                        "width":        1920,
-                        "height":       1080
-                }
-```
+	- Create 2nd object   
+		This is array in object.
+		```
+		{
+		                "id":   0,
+		                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+		                "cores":        2,
+		                "array":        ["abc", 123, true, false, null]
+		        }
+		```
 
-```
-{
-                        "width":        3840,
-                        "height":       2160
-                }
-```
+	- Create array as root
+		```
+		[{
+		                "id":   0,
+		                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+		                "cores":        2,
+		                "array":        ["abc", 123, true, false, null]
+		        }, {
+		                "id":   1,
+		                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
+		                "cores":        2,
+		                "array":        ["abc", 123, true, false, null]
+		        }]
+		```
 
-- Create arry   
-```
-[{
-                        "width":        1280,
-                        "height":       720
-                }, {
-                        "width":        1920,
-                        "height":       1080
-                }, {
-                        "width":        3840,
-                        "height":       2160
-                }]
-```
-
-- Cretae object as root
-```
-{
-        "version":      "v5.0-dev-3202-ga2d5041492-dirty",
-        "cores":        2,
-        "array":  [{
-                        "width":        1280,
-                        "height":       720
-                }, {
-                        "width":        1920,
-                        "height":       1080
-                }, {
-                        "width":        3840,
-                        "height":       2160
-                }]
-}
-```
 
 - Target structure
 	```
