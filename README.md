@@ -244,7 +244,7 @@ No matter how complex the structure, there are only objects and arrays.
 	- Create 1st object   
 		This is array in object.
 		```
-		{
+		        {
 		                "id":   1,
 		                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
 		                "cores":        2,
@@ -255,7 +255,7 @@ No matter how complex the structure, there are only objects and arrays.
 	- Create 2nd object   
 		This is array in object.
 		```
-		{
+		        {
 		                "id":   0,
 		                "version":      "v5.0-dev-3202-ga2d5041492-dirty",
 		                "cores":        2,
