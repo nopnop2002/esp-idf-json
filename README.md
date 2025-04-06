@@ -138,8 +138,9 @@ element is added by cJSON_AddItemToObject.
         }]
 ```
 
-# How to Serialize
-Serialize from the bottom layer.
+# How to Serialize   
+Serialization starts from the lowest level.   
+No matter how complex the structure, there are only objects and arrays.   
 
 - Target structure
 	```
