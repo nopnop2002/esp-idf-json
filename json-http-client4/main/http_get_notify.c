@@ -118,10 +118,10 @@ void JSON_Parse(const cJSON * const root) {
 	}
 }
 
-size_t http_client_content_length(char * url, char * cert_pem)
+int http_client_content_length(char * url, char * cert_pem)
 {
 	ESP_LOGI(TAG, "http_client_content_length url=%s",url);
-	size_t content_length;
+	int content_length;
 	
 	esp_http_client_config_t config = {
 		.url = url,
@@ -183,7 +183,7 @@ void http_get_task(void* pvParameters)
 		ESP_LOGI(TAG, "ulTaskNotifyTake value=0x%"PRIx32, value);
 
 		// Get content length
-		size_t content_length;
+		int content_length;
 		for (int retry=0;retry<10;retry++) {
 			content_length = http_client_content_length(CONFIG_ESP_REST_URL, NULL);
 			ESP_LOGI(TAG, "content_length=%d", content_length);
@@ -191,7 +191,7 @@ void http_get_task(void* pvParameters)
 			vTaskDelay(100);
 		}
 
-		if (content_length == 0) {
+		if (content_length <= 0) {
 			ESP_LOGE(TAG, "[%s] server does not respond", CONFIG_ESP_REST_URL);
 			while(1) {
 				vTaskDelay(100);
