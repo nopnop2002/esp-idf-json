@@ -7,6 +7,9 @@ The official documentation for the JSON component is [here](https://github.com/D
 
 [Here](https://github.com/DaveGamble/cJSON/blob/master/tests/readme_examples.c) is a example by Dave Gamble.
 
+__Note for ESP-IDF V6__   
+It was a standard component up to ESP-IDF V5, but became a non-standard component from V6 onwards and was moved to the component registry.   
+
 # How to use
 ```
 git clone https://github.com/nopnop2002/esp-idf-json
