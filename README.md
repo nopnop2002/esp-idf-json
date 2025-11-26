@@ -9,6 +9,15 @@ The official documentation for the JSON component is [here](https://github.com/D
 
 __Note for ESP-IDF V6__   
 It was a standard component up to ESP-IDF V5, but became a non-standard component from V6 onwards and was moved to the component registry.   
+The IDF Component Manager Manifest File (idf_component.yml) is required.   
+```
+## IDF Component Manager Manifest File
+dependencies:
+  espressif/cjson:
+    version: "^1.7.0"
+    rules:
+      - if: "idf_version >=6.0"
+```
 
 # How to use
 ```
