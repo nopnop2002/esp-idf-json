@@ -17,7 +17,17 @@ I (363) JSON: node[8] self=[302] parent=[202]
 I (373) JSON: node[9] self=[401] parent=[301]
 ```
 
-## Serialize
+# Node structure
+```
+node0 --+-- node101 ----- node201 ----- node301 ----- node401
+        |
+        +-- node102 --+-- node202 ----- node302
+        |             +-- node203
+        |
+        +-- node103
+```
+
+# Serialize
 ```
 {
         "level":        0,
