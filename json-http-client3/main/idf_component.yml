@@ -1,7 +1,7 @@
 ## IDF Component Manager Manifest File
 dependencies:
   Molorius/esp32-websocket:
-    git: https://github.com/Molorius/esp32-websocket
+    git: https://github.com/nopnop2002/esp32-websocket
   espressif/mdns:
     version: "^1.0.3"
     rules:
